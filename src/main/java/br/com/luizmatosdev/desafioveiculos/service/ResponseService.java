@@ -4,12 +4,10 @@ import br.com.luizmatosdev.desafioveiculos.enums.Retorno;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import lombok.Getter;
-import lombok.Setter;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({"message", "data"})
 @Getter
-@Setter
 public class ResponseService<T> {
     private final T data;
     private final Message message;

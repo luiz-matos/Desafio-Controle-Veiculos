@@ -6,9 +6,7 @@ import br.com.luizmatosdev.desafioveiculos.exception.VeiculoNaoExistenteExceptio
 import java.util.List;
 import java.util.UUID;
 import org.springframework.data.domain.Page;
-import org.springframework.stereotype.Service;
 
-@Service
 public interface IVeiculoService {
 
     /**
