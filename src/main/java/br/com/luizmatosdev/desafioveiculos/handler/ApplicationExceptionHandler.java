@@ -11,10 +11,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.method.MethodValidationException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @Slf4j
 @RestControllerAdvice
@@ -45,6 +47,19 @@ public class ApplicationExceptionHandler {
             errors.add(error);
         });
 
+        return montarRespostaCamposInvalidos(errors);
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ResponseService<CampoInvalidoResponse>> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
+        var errors = ex.getBindingResult().getFieldErrors().stream()
+                .map(error -> new InputErrorDTO(error.getField(), error.getDefaultMessage()))
+                .toList();
+
+        return montarRespostaCamposInvalidos(errors);
+    }
+
+    private ResponseEntity<ResponseService<CampoInvalidoResponse>> montarRespostaCamposInvalidos(List<InputErrorDTO> errors) {
         var response = new CampoInvalidoResponse(errors);
 
         return new ResponseEntity<>(ResponseService.build(

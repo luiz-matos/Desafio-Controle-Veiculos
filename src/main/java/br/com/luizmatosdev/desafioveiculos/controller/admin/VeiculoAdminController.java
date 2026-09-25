@@ -20,7 +20,7 @@ public class VeiculoAdminController implements VeiculoAdminControllerApi {
     private final VeiculoService service;
 
     @Override
-    public ResponseEntity<ResponseService<VeiculoResponseDTO>> criar(@RequestBody VeiculoRequestDTO veiculo) {
+    public ResponseEntity<ResponseService<VeiculoResponseDTO>> criar(VeiculoRequestDTO veiculo) {
         return ResponseEntity.ok(ResponseService.build(service.criar(veiculo)));
     }
 

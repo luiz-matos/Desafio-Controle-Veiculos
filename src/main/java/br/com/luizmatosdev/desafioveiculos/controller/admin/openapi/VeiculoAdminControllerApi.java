@@ -28,7 +28,7 @@ public interface VeiculoAdminControllerApi {
                     content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = CampoInvalidoResponse.class))}
             )
     })
-    ResponseEntity<ResponseService<VeiculoResponseDTO>> criar(@RequestBody VeiculoRequestDTO veiculo);
+    ResponseEntity<ResponseService<VeiculoResponseDTO>> criar(@Valid @RequestBody VeiculoRequestDTO veiculo);
 
     @PutMapping("{id}")
     @Operation(summary = "Altera os dados de um veículo")
