@@ -18,6 +18,7 @@ public class VeiculoSpecification {
     public static Specification<Veiculo> filtrar(ListarVeiculosDTO listarVeiculosDTO) {
         return (root, criteriaQuery, criteriaBuilder) -> {
             List<Predicate> predicates = new ArrayList<>();
+            predicates.add(criteriaBuilder.isFalse(root.get("deletado")));
 
             if (Objects.nonNull(listarVeiculosDTO.marca())) {
                 predicates.add(criteriaBuilder.like(root.get("marca"), "%" + listarVeiculosDTO.marca() + "%"));
@@ -27,25 +28,12 @@ public class VeiculoSpecification {
                 predicates.add(criteriaBuilder.equal(root.get("ano"), listarVeiculosDTO.ano()));
             }
 
-            if (Objects.nonNull(listarVeiculosDTO.cor())) {
-                predicates.add(criteriaBuilder.like(root.get("cor"), "%" + listarVeiculosDTO.cor() + "%"));
-            }
-
             if (Objects.nonNull(listarVeiculosDTO.minPreco())) {
-                predicates.add(criteriaBuilder.greaterThanOrEqualTo(root.get("preco"), listarVeiculosDTO.minPreco()));
+                predicates.add(criteriaBuilder.greaterThanOrEqualTo(root.get("valor"), listarVeiculosDTO.minPreco()));
             }
 
             if (Objects.nonNull(listarVeiculosDTO.maxPreco())) {
-                predicates.add(criteriaBuilder.lessThanOrEqualTo(root.get("preco"), listarVeiculosDTO.maxPreco()));
-            }
-
-            if (Objects.nonNull(listarVeiculosDTO.sort())) {
-                var orders = listarVeiculosDTO.sort().stream()
-                    .map(order -> order.isAscending() 
-                        ? criteriaBuilder.asc(root.get(order.getProperty()))
-                        : criteriaBuilder.desc(root.get(order.getProperty())))
-                    .toList();
-                criteriaQuery.orderBy(orders);
+                predicates.add(criteriaBuilder.lessThanOrEqualTo(root.get("valor"), listarVeiculosDTO.maxPreco()));
             }
 
             return criteriaBuilder.and(predicates.toArray(new Predicate[0]));

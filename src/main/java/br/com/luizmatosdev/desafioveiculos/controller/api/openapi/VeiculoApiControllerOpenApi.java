@@ -64,9 +64,15 @@ public interface VeiculoApiControllerOpenApi {
     )
     @Parameter(
             in = ParameterIn.QUERY,
-            name = "cor",
-            description = "Filtra pela cor do veículo",
-            schema = @Schema(type = "string")
+            name = "minPreco",
+            description = "Valor mínimo em reais, como foi cadastrado",
+            schema = @Schema(type = "number")
+    )
+    @Parameter(
+            in = ParameterIn.QUERY,
+            name = "maxPreco",
+            description = "Valor máximo em reais, como foi cadastrado",
+            schema = @Schema(type = "number")
     )
     @Operation(summary = "Lista os veículos")
     @ApiResponses(value = {
@@ -76,7 +82,6 @@ public interface VeiculoApiControllerOpenApi {
             @Parameter(hidden = true) @PageableDefault Pageable pageable,
             @RequestParam(required = false) String marca,
             @RequestParam(required = false) Integer ano,
-            @RequestParam(required = false) String cor,
             @RequestParam(required = false) BigDecimal minPreco,
             @RequestParam(required = false) BigDecimal maxPreco
     );

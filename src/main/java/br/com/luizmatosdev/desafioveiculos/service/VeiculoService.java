@@ -33,7 +33,7 @@ public class VeiculoService implements IVeiculoService {
 
     @Override
     public Page<VeiculoResponseDTO> listar(ListarVeiculosDTO listarVeiculosDTO) {
-        var pageable = PageRequest.of(listarVeiculosDTO.page(), listarVeiculosDTO.size());
+        var pageable = PageRequest.of(listarVeiculosDTO.page(), listarVeiculosDTO.size(), listarVeiculosDTO.sort());
         var specification = VeiculoSpecification.filtrar(listarVeiculosDTO);
         var todos = repository.findAll(specification, pageable);
         var valorDolar = valorDolarService.buscarValorAtual();

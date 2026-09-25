@@ -8,6 +8,7 @@ import br.com.luizmatosdev.desafioveiculos.service.ResponseService;
 import jakarta.validation.ConstraintViolationException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.core.PropertyReferenceException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.method.MethodValidationException;
@@ -68,6 +69,12 @@ public class ApplicationExceptionHandler {
                 Retorno.CAMPO_INVALIDO_OU_OBRIGATORIO.getDescricao()),
                 HttpStatus.BAD_REQUEST
         );
+    }
+
+    @ExceptionHandler(PropertyReferenceException.class)
+    protected ResponseEntity<ResponseService<Void>> handlePropertyReferenceException(PropertyReferenceException ex) {
+        log.warn(ex.getMessage());
+        return montarResposta(Retorno.CAMPO_INVALIDO_OU_OBRIGATORIO, HttpStatus.BAD_REQUEST);
     }
 
     private ResponseEntity<ResponseService<Void>> montarResposta(Retorno retorno, HttpStatus httpStatus) {

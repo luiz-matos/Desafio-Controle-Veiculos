@@ -10,6 +10,7 @@ import br.com.luizmatosdev.desafioveiculos.repository.VeiculoRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -75,7 +76,7 @@ class VeiculoServiceTest {
     @Test
     void listar_DeveRetornarPaginaDeVeiculos_QuandoChamado() {
         // Arrange
-        ListarVeiculosDTO filtros = new ListarVeiculosDTO(0, 10, null, null, null, null, null, null);
+        ListarVeiculosDTO filtros = new ListarVeiculosDTO(0, 10, Sort.unsorted(), null, null, null, null);
         
         Veiculo veiculo1 = new Veiculo();
         veiculo1.setId(UUID.randomUUID());

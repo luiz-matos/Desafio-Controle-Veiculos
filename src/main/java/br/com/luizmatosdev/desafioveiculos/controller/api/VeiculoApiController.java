@@ -27,7 +27,6 @@ public class VeiculoApiController implements VeiculoApiControllerOpenApi {
         Pageable pageable,
         String marca,
         Integer ano,
-        String cor,
         BigDecimal minPreco,
         BigDecimal maxPreco
     ) {
@@ -37,7 +36,6 @@ public class VeiculoApiController implements VeiculoApiControllerOpenApi {
             pageable.getSort(),
             marca,
             ano,
-            cor,
             minPreco,
             maxPreco
         );

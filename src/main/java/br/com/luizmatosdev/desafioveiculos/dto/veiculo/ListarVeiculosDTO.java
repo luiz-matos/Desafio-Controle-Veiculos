@@ -10,7 +10,6 @@ public record ListarVeiculosDTO(
     Sort sort,
     String marca,
     Integer ano,
-    String cor,
     BigDecimal minPreco,
     BigDecimal maxPreco
 ) {
