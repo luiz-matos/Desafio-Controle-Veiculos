@@ -5,6 +5,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 
 import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -40,5 +42,32 @@ class ValidacaoTest extends ApiTest {
                         .content(veiculo("", "Honda", 2020, "-1", "ABC1234")))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.data.fields[*].field", containsInAnyOrder("veiculo", "valor")));
+    }
+
+    @Test
+    void recusaAlteracaoParcialComCamposInvalidos() throws Exception {
+        String id = criarVeiculo(veiculo("Civic", "Honda", 2020, "10000", "ABC1234"));
+
+        mockMvc.perform(comToken(patch("/admin/veiculos/" + id), tokenAdmin())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"veiculo\":\" \",\"valor\":-1,\"placa\":\"PLACAGRANDE123\"}"))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.data.fields[*].field", containsInAnyOrder("veiculo", "valor", "placa")));
+
+        mockMvc.perform(comToken(get("/api/veiculos/" + id), tokenAdmin()))
+                .andExpect(jsonPath("$.data.veiculo").value("Civic"));
+    }
+
+    @Test
+    void alteraSoOCampoInformadoNaAlteracaoParcial() throws Exception {
+        String id = criarVeiculo(veiculo("Civic", "Honda", 2020, "10000", "ABC1234"));
+
+        mockMvc.perform(comToken(patch("/admin/veiculos/" + id), tokenAdmin())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"descricao\":\"Sedan\"}"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data.descricao").value("Sedan"))
+                .andExpect(jsonPath("$.data.veiculo").value("Civic"))
+                .andExpect(jsonPath("$.data.placa").value("ABC1234"));
     }
 }
