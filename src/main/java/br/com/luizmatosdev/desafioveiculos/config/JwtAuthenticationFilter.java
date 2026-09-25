@@ -1,5 +1,6 @@
 package br.com.luizmatosdev.desafioveiculos.config;
 
+import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -32,7 +33,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
 
         String jwt = authHeader.substring(7);
-        String username = jwtUtil.extractUsername(jwt);
+        String username;
+        try {
+            username = jwtUtil.extractUsername(jwt);
+        } catch (JwtException e) {
+            // Token malformado, adulterado ou expirado: segue sem autenticação e a rota protegida responde 401
+            filterChain.doFilter(request, response);
+            return;
+        }
 
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails userDetails = userDetailsService.loadUserByUsername(username);
