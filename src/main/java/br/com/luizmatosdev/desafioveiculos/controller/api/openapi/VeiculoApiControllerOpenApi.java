@@ -27,7 +27,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Validated
-@Tag(name = "Clientes", description = "Gerencia os clientes")
+@Tag(name = "Veículos", description = "Consulta de veículos, para USER e ADMIN")
 @RequestMapping("/api/veiculos")
 public interface VeiculoApiControllerOpenApi {
 
