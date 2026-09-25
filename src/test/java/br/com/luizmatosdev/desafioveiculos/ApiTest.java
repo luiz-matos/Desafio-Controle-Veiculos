@@ -1,7 +1,12 @@
 package br.com.luizmatosdev.desafioveiculos;
 
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import br.com.luizmatosdev.desafioveiculos.interfaces.service.IValorDolarService;
 import com.jayway.jsonpath.JsonPath;
+import java.math.BigDecimal;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -12,12 +17,6 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
-
-import java.math.BigDecimal;
-
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
  * Sobe a aplicação inteira com H2 e a cotação do dólar fixa em 5,00, sem Redis nem API externa.
@@ -57,7 +56,9 @@ public abstract class ApiTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"username\":\"%s\",\"password\":\"%s\"}".formatted(username, password)))
                 .andExpect(status().isOk())
-                .andReturn().getResponse().getContentAsString();
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
         return JsonPath.read(resposta, "$.token");
     }
 
@@ -70,7 +71,9 @@ public abstract class ApiTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json))
                 .andExpect(status().is2xxSuccessful())
-                .andReturn().getResponse().getContentAsString();
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
         return JsonPath.read(resposta, "$.data.id");
     }
 

@@ -6,15 +6,14 @@ import br.com.luizmatosdev.desafioveiculos.dto.veiculo.QuantidadeVeiculoPorMarca
 import br.com.luizmatosdev.desafioveiculos.dto.veiculo.VeiculoResponseDTO;
 import br.com.luizmatosdev.desafioveiculos.service.ResponseService;
 import br.com.luizmatosdev.desafioveiculos.service.VeiculoService;
+import java.math.BigDecimal;
+import java.util.List;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.math.BigDecimal;
-import java.util.List;
-import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
@@ -24,21 +23,9 @@ public class VeiculoApiController implements VeiculoApiControllerOpenApi {
 
     @Override
     public ResponseEntity<Page<VeiculoResponseDTO>> listar(
-        Pageable pageable,
-        String marca,
-        Integer ano,
-        BigDecimal minPreco,
-        BigDecimal maxPreco
-    ) {
+            Pageable pageable, String marca, Integer ano, BigDecimal minPreco, BigDecimal maxPreco) {
         ListarVeiculosDTO listarVeiculosDTO = new ListarVeiculosDTO(
-            pageable.getPageNumber(),
-            pageable.getPageSize(),
-            pageable.getSort(),
-            marca,
-            ano,
-            minPreco,
-            maxPreco
-        );
+                pageable.getPageNumber(), pageable.getPageSize(), pageable.getSort(), marca, ano, minPreco, maxPreco);
         return ResponseEntity.ok(veiculoService.listar(listarVeiculosDTO));
     }
 

@@ -5,30 +5,20 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
 import jakarta.validation.constraints.Size;
-
 import java.math.BigDecimal;
 
 public record VeiculoRequestDTO(
-    @NotBlank
-    @Size(max = 100)
-    String veiculo,
+        @NotBlank @Size(max = 100) String veiculo,
 
-    @NotBlank
-    @Size(max = 100)
-    String marca,
+        @NotBlank @Size(max = 100) String marca,
 
-    @NotNull
-    Integer ano,
+        @NotNull Integer ano,
 
-    String descricao,
+        String descricao,
 
-    @PositiveOrZero
-    BigDecimal valor,
+        @PositiveOrZero BigDecimal valor,
 
-    @NotBlank
-    @Size(max = 8)
-    String placa
-) {
+        @NotBlank @Size(max = 8) String placa) {
     public Veiculo toVeiculo() {
         Veiculo entity = new Veiculo();
         entity.setVeiculo(this.veiculo);

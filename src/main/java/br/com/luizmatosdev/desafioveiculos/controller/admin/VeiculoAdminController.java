@@ -6,11 +6,10 @@ import br.com.luizmatosdev.desafioveiculos.dto.veiculo.VeiculoRequestDTO;
 import br.com.luizmatosdev.desafioveiculos.dto.veiculo.VeiculoResponseDTO;
 import br.com.luizmatosdev.desafioveiculos.service.ResponseService;
 import br.com.luizmatosdev.desafioveiculos.service.VeiculoService;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.UUID;
 
 @RestController
 @RequestMapping("/admin/veiculos")
@@ -30,7 +29,8 @@ public class VeiculoAdminController implements VeiculoAdminControllerApi {
     }
 
     @Override
-    public ResponseEntity<ResponseService<VeiculoResponseDTO>> atualizarParcialmente(UUID id, AlterarParcialmenteVeiculoRequestDTO request) {
+    public ResponseEntity<ResponseService<VeiculoResponseDTO>> atualizarParcialmente(
+            UUID id, AlterarParcialmenteVeiculoRequestDTO request) {
         return ResponseEntity.ok(ResponseService.build(service.alterarParcialmente(id, request)));
     }
 

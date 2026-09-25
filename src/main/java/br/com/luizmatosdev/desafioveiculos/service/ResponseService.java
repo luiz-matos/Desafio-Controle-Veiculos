@@ -31,6 +31,5 @@ public class ResponseService<T> {
         return new ResponseService<>(null, new Message(code, message));
     }
 
-    private record Message(Integer codigo, String descricao) {
-    }
+    private record Message(Integer codigo, String descricao) {}
 }

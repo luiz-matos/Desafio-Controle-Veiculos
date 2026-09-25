@@ -2,13 +2,12 @@ package br.com.luizmatosdev.desafioveiculos.repository;
 
 import br.com.luizmatosdev.desafioveiculos.dto.veiculo.QuantidadeVeiculoPorMarcaResponseDTO;
 import br.com.luizmatosdev.desafioveiculos.entity.Veiculo;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
-import org.springframework.stereotype.Repository;
-
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 
 @Repository
 public interface VeiculoRepository extends BaseRepository<Veiculo, UUID> {
@@ -16,9 +15,9 @@ public interface VeiculoRepository extends BaseRepository<Veiculo, UUID> {
     Optional<Veiculo> buscarPorPlaca(@Param("placa") String placa);
 
     @Query("""
-        SELECT new br.com.luizmatosdev.desafioveiculos.dto.veiculo.QuantidadeVeiculoPorMarcaResponseDTO(COUNT(v), v.marca) 
-        FROM Veiculo v 
-        WHERE v.deletado = false 
+        SELECT new br.com.luizmatosdev.desafioveiculos.dto.veiculo.QuantidadeVeiculoPorMarcaResponseDTO(COUNT(v), v.marca)
+        FROM Veiculo v
+        WHERE v.deletado = false
         GROUP BY v.marca
     """)
     List<QuantidadeVeiculoPorMarcaResponseDTO> contadorQuantidadePorMarca();

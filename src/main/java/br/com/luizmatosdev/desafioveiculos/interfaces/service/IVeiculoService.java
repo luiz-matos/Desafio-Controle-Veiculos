@@ -3,11 +3,10 @@ package br.com.luizmatosdev.desafioveiculos.interfaces.service;
 import br.com.luizmatosdev.desafioveiculos.dto.veiculo.*;
 import br.com.luizmatosdev.desafioveiculos.exception.VeiculoJaExistenteException;
 import br.com.luizmatosdev.desafioveiculos.exception.VeiculoNaoExistenteException;
-import org.springframework.data.domain.Page;
-import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.UUID;
+import org.springframework.data.domain.Page;
+import org.springframework.stereotype.Service;
 
 @Service
 public interface IVeiculoService {

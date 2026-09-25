@@ -1,14 +1,14 @@
 package br.com.luizmatosdev.desafioveiculos.controller;
 
-import br.com.luizmatosdev.desafioveiculos.ApiTest;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-
 import static org.hamcrest.Matchers.contains;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import br.com.luizmatosdev.desafioveiculos.ApiTest;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 class ListagemTest extends ApiTest {
 
@@ -21,14 +21,12 @@ class ListagemTest extends ApiTest {
 
     @Test
     void filtraPelaMarca() throws Exception {
-        listar("?marca=Toyota&sort=veiculo")
-                .andExpect(jsonPath("$.content[*].veiculo", contains("Corolla")));
+        listar("?marca=Toyota&sort=veiculo").andExpect(jsonPath("$.content[*].veiculo", contains("Corolla")));
     }
 
     @Test
     void filtraPeloAno() throws Exception {
-        listar("?ano=2020")
-                .andExpect(jsonPath("$.content[*].veiculo", contains("Civic")));
+        listar("?ano=2020").andExpect(jsonPath("$.content[*].veiculo", contains("Civic")));
     }
 
     @Test
@@ -39,8 +37,7 @@ class ListagemTest extends ApiTest {
 
     @Test
     void ordenaPeloCampoInformado() throws Exception {
-        listar("?sort=veiculo,desc")
-                .andExpect(jsonPath("$.content[*].veiculo", contains("Fit", "Corolla", "Civic")));
+        listar("?sort=veiculo,desc").andExpect(jsonPath("$.content[*].veiculo", contains("Fit", "Corolla", "Civic")));
     }
 
     @Test
@@ -53,17 +50,14 @@ class ListagemTest extends ApiTest {
     @Test
     void naoListaVeiculoExcluido() throws Exception {
         String id = criarVeiculo(veiculo("Ka", "Ford", 2015, "5000", "JKL3456"));
-        mockMvc.perform(comToken(delete("/admin/veiculos/" + id), tokenAdmin()))
-                .andExpect(status().isOk());
+        mockMvc.perform(comToken(delete("/admin/veiculos/" + id), tokenAdmin())).andExpect(status().isOk());
 
-        listar("?marca=Ford")
-                .andExpect(jsonPath("$.totalElements").value(0));
+        listar("?marca=Ford").andExpect(jsonPath("$.totalElements").value(0));
     }
 
     @Test
     void recusaOrdenacaoPorCampoQueNaoExiste() throws Exception {
-        mockMvc.perform(comToken(get("/api/veiculos?sort=cor"), tokenUser()))
-                .andExpect(status().isBadRequest());
+        mockMvc.perform(comToken(get("/api/veiculos?sort=cor"), tokenUser())).andExpect(status().isBadRequest());
     }
 
     private org.springframework.test.web.servlet.ResultActions listar(String filtros) throws Exception {

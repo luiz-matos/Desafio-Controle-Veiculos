@@ -9,13 +9,12 @@ import br.com.luizmatosdev.desafioveiculos.interfaces.service.IValorDolarService
 import br.com.luizmatosdev.desafioveiculos.interfaces.service.IVeiculoService;
 import br.com.luizmatosdev.desafioveiculos.mapper.VeiculoMapper;
 import br.com.luizmatosdev.desafioveiculos.repository.VeiculoRepository;
+import java.util.List;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor

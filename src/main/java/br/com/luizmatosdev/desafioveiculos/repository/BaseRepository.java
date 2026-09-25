@@ -2,14 +2,13 @@ package br.com.luizmatosdev.desafioveiculos.repository;
 
 import jakarta.annotation.Nonnull;
 import jakarta.transaction.Transactional;
+import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.NoRepositoryBean;
 import org.springframework.data.repository.query.Param;
-
-import java.util.Optional;
 
 @NoRepositoryBean
 public interface BaseRepository<T, E> extends JpaRepository<T, E>, JpaSpecificationExecutor<T> {

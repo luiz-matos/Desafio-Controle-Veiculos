@@ -4,11 +4,10 @@ import br.com.luizmatosdev.desafioveiculos.client.EconomiaAwesomeApiWsClient;
 import br.com.luizmatosdev.desafioveiculos.client.FrankfurterApiClient;
 import br.com.luizmatosdev.desafioveiculos.exception.ErroWsException;
 import br.com.luizmatosdev.desafioveiculos.interfaces.service.IValorDolarService;
+import java.math.BigDecimal;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
-
-import java.math.BigDecimal;
 
 @Service
 @RequiredArgsConstructor

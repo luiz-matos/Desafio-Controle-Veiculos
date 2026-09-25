@@ -2,7 +2,6 @@ package br.com.luizmatosdev.desafioveiculos.mapper;
 
 import br.com.luizmatosdev.desafioveiculos.dto.veiculo.VeiculoResponseDTO;
 import br.com.luizmatosdev.desafioveiculos.entity.Veiculo;
-
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
@@ -16,14 +15,13 @@ public class VeiculoMapper {
      */
     public static VeiculoResponseDTO toResponseDTO(Veiculo veiculo, BigDecimal valorDolar) {
         return new VeiculoResponseDTO(
-            veiculo.getId(),
-            veiculo.getVeiculo(),
-            veiculo.getMarca(),
-            veiculo.getAno(),
-            veiculo.getDescricao(),
-            converterParaDolar(veiculo.getValor(), valorDolar),
-            veiculo.getPlaca()
-        );
+                veiculo.getId(),
+                veiculo.getVeiculo(),
+                veiculo.getMarca(),
+                veiculo.getAno(),
+                veiculo.getDescricao(),
+                converterParaDolar(veiculo.getValor(), valorDolar),
+                veiculo.getPlaca());
     }
 
     private static BigDecimal converterParaDolar(BigDecimal valorEmReais, BigDecimal valorDolar) {

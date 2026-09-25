@@ -1,12 +1,12 @@
 package br.com.luizmatosdev.desafioveiculos.controller;
 
-import br.com.luizmatosdev.desafioveiculos.ApiTest;
-import org.junit.jupiter.api.Test;
-import org.springframework.http.MediaType;
-
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import br.com.luizmatosdev.desafioveiculos.ApiTest;
+import org.junit.jupiter.api.Test;
+import org.springframework.http.MediaType;
 
 class AutenticacaoTest extends ApiTest {
 
@@ -20,14 +20,12 @@ class AutenticacaoTest extends ApiTest {
 
     @Test
     void recusaRequisicaoSemTokenCom401() throws Exception {
-        mockMvc.perform(get("/api/veiculos"))
-                .andExpect(status().isUnauthorized());
+        mockMvc.perform(get("/api/veiculos")).andExpect(status().isUnauthorized());
     }
 
     @Test
     void recusaTokenInvalidoCom401() throws Exception {
-        mockMvc.perform(comToken(get("/api/veiculos"), "abc.def.ghi"))
-                .andExpect(status().isUnauthorized());
+        mockMvc.perform(comToken(get("/api/veiculos"), "abc.def.ghi")).andExpect(status().isUnauthorized());
     }
 
     @Test
@@ -35,8 +33,7 @@ class AutenticacaoTest extends ApiTest {
         String token = tokenUser();
         String adulterado = token.substring(0, token.length() - 4) + "AAAA";
 
-        mockMvc.perform(comToken(get("/api/veiculos"), adulterado))
-                .andExpect(status().isUnauthorized());
+        mockMvc.perform(comToken(get("/api/veiculos"), adulterado)).andExpect(status().isUnauthorized());
     }
 
     @Test

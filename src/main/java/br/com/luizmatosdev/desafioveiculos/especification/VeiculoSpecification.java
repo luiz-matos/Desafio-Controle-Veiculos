@@ -3,11 +3,10 @@ package br.com.luizmatosdev.desafioveiculos.especification;
 import br.com.luizmatosdev.desafioveiculos.dto.veiculo.ListarVeiculosDTO;
 import br.com.luizmatosdev.desafioveiculos.entity.Veiculo;
 import jakarta.persistence.criteria.Predicate;
-import org.springframework.data.jpa.domain.Specification;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import org.springframework.data.jpa.domain.Specification;
 
 public class VeiculoSpecification {
 

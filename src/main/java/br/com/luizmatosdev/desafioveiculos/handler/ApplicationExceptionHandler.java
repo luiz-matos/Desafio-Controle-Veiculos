@@ -7,6 +7,8 @@ import br.com.luizmatosdev.desafioveiculos.exception.ErroWsException;
 import br.com.luizmatosdev.desafioveiculos.exception.GlobalException;
 import br.com.luizmatosdev.desafioveiculos.service.ResponseService;
 import jakarta.validation.ConstraintViolationException;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.core.PropertyReferenceException;
@@ -16,9 +18,6 @@ import org.springframework.validation.method.MethodValidationException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Slf4j
 @RestControllerAdvice
@@ -46,7 +45,8 @@ public class ApplicationExceptionHandler {
     }
 
     @ExceptionHandler(ConstraintViolationException.class)
-    public ResponseEntity<ResponseService<CampoInvalidoResponse>> handleConstraintViolationException(ConstraintViolationException ex) {
+    public ResponseEntity<ResponseService<CampoInvalidoResponse>> handleConstraintViolationException(
+            ConstraintViolationException ex) {
         var errors = new ArrayList<InputErrorDTO>();
 
         ex.getConstraintViolations().forEach(violation -> {
@@ -58,7 +58,8 @@ public class ApplicationExceptionHandler {
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ResponseService<CampoInvalidoResponse>> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
+    public ResponseEntity<ResponseService<CampoInvalidoResponse>> handleMethodArgumentNotValidException(
+            MethodArgumentNotValidException ex) {
         var errors = ex.getBindingResult().getFieldErrors().stream()
                 .map(error -> new InputErrorDTO(error.getField(), error.getDefaultMessage()))
                 .toList();
@@ -66,15 +67,16 @@ public class ApplicationExceptionHandler {
         return montarRespostaCamposInvalidos(errors);
     }
 
-    private ResponseEntity<ResponseService<CampoInvalidoResponse>> montarRespostaCamposInvalidos(List<InputErrorDTO> errors) {
+    private ResponseEntity<ResponseService<CampoInvalidoResponse>> montarRespostaCamposInvalidos(
+            List<InputErrorDTO> errors) {
         var response = new CampoInvalidoResponse(errors);
 
-        return new ResponseEntity<>(ResponseService.build(
-                response,
-                Retorno.CAMPO_INVALIDO_OU_OBRIGATORIO.getCodigo(),
-                Retorno.CAMPO_INVALIDO_OU_OBRIGATORIO.getDescricao()),
-                HttpStatus.BAD_REQUEST
-        );
+        return new ResponseEntity<>(
+                ResponseService.build(
+                        response,
+                        Retorno.CAMPO_INVALIDO_OU_OBRIGATORIO.getCodigo(),
+                        Retorno.CAMPO_INVALIDO_OU_OBRIGATORIO.getDescricao()),
+                HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(PropertyReferenceException.class)

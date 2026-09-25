@@ -1,16 +1,17 @@
 package br.com.luizmatosdev.desafioveiculos.config;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import io.jsonwebtoken.JwtException;
 import org.junit.jupiter.api.Test;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-
 class JwtUtilTest {
 
-    private final UserDetails admin = User.withUsername("admin").password("x").roles("ADMIN").build();
+    private final UserDetails admin =
+            User.withUsername("admin").password("x").roles("ADMIN").build();
 
     @Test
     void leOUsuarioDeUmTokenAssinadoComOMesmoSegredo() {

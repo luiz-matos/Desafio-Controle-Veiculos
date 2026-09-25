@@ -1,9 +1,5 @@
 package br.com.luizmatosdev.desafioveiculos.controller;
 
-import br.com.luizmatosdev.desafioveiculos.ApiTest;
-import org.junit.jupiter.api.Test;
-import org.springframework.http.MediaType;
-
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
@@ -11,6 +7,10 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import br.com.luizmatosdev.desafioveiculos.ApiTest;
+import org.junit.jupiter.api.Test;
+import org.springframework.http.MediaType;
 
 class ValidacaoTest extends ApiTest {
 
