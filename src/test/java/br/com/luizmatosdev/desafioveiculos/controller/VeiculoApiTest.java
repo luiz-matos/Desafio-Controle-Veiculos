@@ -48,4 +48,12 @@ class VeiculoApiTest extends ApiTest {
 
         criarVeiculo(veiculo("Civic", "Honda", 2020, "10000", "ABC1234"));
     }
+
+    @Test
+    void mostraOValorCadastradoEmReaisConvertidoParaDolar() throws Exception {
+        String id = criarVeiculo(veiculo("Civic", "Honda", 2020, "10000", "ABC1234"));
+
+        mockMvc.perform(comToken(get("/api/veiculos/" + id), tokenUser()))
+                .andExpect(jsonPath("$.data.valor").value(2000.00));
+    }
 }

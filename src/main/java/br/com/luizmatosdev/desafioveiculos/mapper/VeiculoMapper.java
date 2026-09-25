@@ -11,6 +11,9 @@ public class VeiculoMapper {
         throw new UnsupportedOperationException("Classe não instanciada");
     }
 
+    /**
+     * @param valorDolar cotação do dólar em reais; o valor do veículo é cadastrado em reais e sai em dólar
+     */
     public static VeiculoResponseDTO toResponseDTO(Veiculo veiculo, BigDecimal valorDolar) {
         return new VeiculoResponseDTO(
             veiculo.getId(),
@@ -18,7 +21,7 @@ public class VeiculoMapper {
             veiculo.getMarca(),
             veiculo.getAno(),
             veiculo.getDescricao(),
-            valorDolar.multiply(veiculo.getValor()).setScale(2, RoundingMode.HALF_UP),
+            veiculo.getValor().divide(valorDolar, 2, RoundingMode.HALF_UP),
             veiculo.getPlaca()
         );
     }

@@ -65,7 +65,7 @@ class VeiculoServiceTest {
         assertEquals("Honda", resultado.marca());
         assertEquals(2020, resultado.ano());
         assertEquals("Sedan", resultado.descricao());
-        assertEquals(new BigDecimal("55000.00"), resultado.valor());
+        assertEquals(new BigDecimal("1818.18"), resultado.valor());
         assertEquals("ABC1234", resultado.placa());
         
         verify(repository).findById(id);
@@ -150,7 +150,7 @@ class VeiculoServiceTest {
         assertEquals("Honda", resultado.marca());
         assertEquals(2020, resultado.ano());
         assertEquals("Sedan", resultado.descricao());
-        assertEquals(new BigDecimal("55000.00"), resultado.valor());
+        assertEquals(new BigDecimal("1818.18"), resultado.valor());
         assertEquals("ABC1234", resultado.placa());
         
         verify(repository).buscarPorPlaca("ABC1234");
@@ -206,7 +206,7 @@ class VeiculoServiceTest {
         assertEquals("Toyota", resultado.marca());
         assertEquals(2021, resultado.ano());
         assertEquals("Sedan híbrido", resultado.descricao());
-        assertEquals(new BigDecimal("275000.00"), resultado.valor());
+        assertEquals(new BigDecimal("9090.91"), resultado.valor());
         assertEquals("XYZ5678", resultado.placa());
         
         verify(repository).findById(id);
@@ -262,7 +262,7 @@ class VeiculoServiceTest {
         assertEquals("Honda", resultado.marca()); // não alterado
         assertEquals(2020, resultado.ano()); // não alterado
         assertEquals("Sedan com ar condicionado", resultado.descricao()); // alterado
-        assertEquals(new BigDecimal("467500.00"), resultado.valor()); // alterado
+        assertEquals(new BigDecimal("15454.55"), resultado.valor()); // alterado
         assertEquals("ABC1234", resultado.placa()); // não alterado
         
         verify(repository).findById(id);
