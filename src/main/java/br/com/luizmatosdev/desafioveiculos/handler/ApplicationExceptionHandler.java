@@ -3,6 +3,7 @@ package br.com.luizmatosdev.desafioveiculos.handler;
 import br.com.luizmatosdev.desafioveiculos.dto.InputErrorDTO;
 import br.com.luizmatosdev.desafioveiculos.enums.Retorno;
 import br.com.luizmatosdev.desafioveiculos.exception.EntityNotFoundException;
+import br.com.luizmatosdev.desafioveiculos.exception.ErroWsException;
 import br.com.luizmatosdev.desafioveiculos.exception.GlobalException;
 import br.com.luizmatosdev.desafioveiculos.service.ResponseService;
 import jakarta.validation.ConstraintViolationException;
@@ -26,6 +27,11 @@ public class ApplicationExceptionHandler {
     @ExceptionHandler(GlobalException.class)
     protected ResponseEntity<ResponseService<Void>> handleAtivacaoException(GlobalException ex) {
         return montarResposta(ex.getRetorno(), HttpStatus.UNPROCESSABLE_CONTENT);
+    }
+
+    @ExceptionHandler(ErroWsException.class)
+    public ResponseEntity<ResponseService<Void>> handleErroWsException(ErroWsException ex) {
+        return montarResposta(ex.getRetorno(), HttpStatus.SERVICE_UNAVAILABLE);
     }
 
     @ExceptionHandler(EntityNotFoundException.class)

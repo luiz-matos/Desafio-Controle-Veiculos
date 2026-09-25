@@ -1,9 +1,11 @@
 package br.com.luizmatosdev.desafioveiculos.controller;
 
 import br.com.luizmatosdev.desafioveiculos.ApiTest;
+import br.com.luizmatosdev.desafioveiculos.exception.ErroWsException;
 import org.junit.jupiter.api.Test;
 
 import static org.hamcrest.Matchers.nullValue;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -72,5 +74,15 @@ class VeiculoApiTest extends ApiTest {
         mockMvc.perform(comToken(get("/api/veiculos"), tokenUser()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.content.length()").value(2));
+    }
+
+    @Test
+    void responde503QuandoNenhumaApiDeCotacaoResponde() throws Exception {
+        String id = criarVeiculo(veiculo("Civic", "Honda", 2020, "10000", "ABC1234"));
+        when(valorDolarService.buscarValorAtual()).thenThrow(new ErroWsException());
+
+        mockMvc.perform(comToken(get("/api/veiculos/" + id), tokenUser()))
+                .andExpect(status().isServiceUnavailable())
+                .andExpect(jsonPath("$.message.codigo").value(-80));
     }
 }
