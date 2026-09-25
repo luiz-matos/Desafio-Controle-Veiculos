@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class ApplicationExceptionHandler {
     @ExceptionHandler(GlobalException.class)
-    protected ResponseEntity<ResponseService<Void>> handleAtivacaoException(GlobalException ex) {
+    protected ResponseEntity<ResponseService<Void>> handleGlobalException(GlobalException ex) {
         return montarResposta(ex.getRetorno(), HttpStatus.UNPROCESSABLE_CONTENT);
     }
 
@@ -37,7 +37,7 @@ public class ApplicationExceptionHandler {
     }
 
     @ExceptionHandler(MethodValidationException.class)
-    protected ResponseEntity<ResponseService<Void>> handleAtivacaoException(MethodValidationException ex) {
+    protected ResponseEntity<ResponseService<Void>> handleMethodValidationException(MethodValidationException ex) {
         ex.getParameterValidationResults().forEach(violation -> log.error(violation.toString()));
         return montarResposta(Retorno.CAMPO_INVALIDO_OU_OBRIGATORIO, HttpStatus.UNPROCESSABLE_CONTENT);
     }

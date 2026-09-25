@@ -2,13 +2,13 @@ package br.com.luizmatosdev.desafioveiculos.service;
 
 import br.com.luizmatosdev.desafioveiculos.dto.veiculo.*;
 import br.com.luizmatosdev.desafioveiculos.entity.Veiculo;
-import br.com.luizmatosdev.desafioveiculos.especification.VeiculoSpecification;
 import br.com.luizmatosdev.desafioveiculos.exception.VeiculoJaExistenteException;
 import br.com.luizmatosdev.desafioveiculos.exception.VeiculoNaoExistenteException;
 import br.com.luizmatosdev.desafioveiculos.interfaces.service.IValorDolarService;
 import br.com.luizmatosdev.desafioveiculos.interfaces.service.IVeiculoService;
 import br.com.luizmatosdev.desafioveiculos.mapper.VeiculoMapper;
 import br.com.luizmatosdev.desafioveiculos.repository.VeiculoRepository;
+import br.com.luizmatosdev.desafioveiculos.specification.VeiculoSpecification;
 import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;

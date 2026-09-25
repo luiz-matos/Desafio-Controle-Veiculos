@@ -19,7 +19,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "Administração de veículos", description = "Cadastro, alteração e exclusão, só para ADMIN")
-public interface VeiculoAdminControllerApi {
+public interface VeiculoAdminControllerOpenApi {
 
     @PostMapping
     @Operation(summary = "Cadastra um veículo")

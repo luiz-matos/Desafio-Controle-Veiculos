@@ -1,4 +1,4 @@
-package br.com.luizmatosdev.desafioveiculos.especification;
+package br.com.luizmatosdev.desafioveiculos.specification;
 
 import br.com.luizmatosdev.desafioveiculos.dto.veiculo.ListarVeiculosDTO;
 import br.com.luizmatosdev.desafioveiculos.entity.Veiculo;

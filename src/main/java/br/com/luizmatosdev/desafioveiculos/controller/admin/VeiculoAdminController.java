@@ -1,6 +1,6 @@
 package br.com.luizmatosdev.desafioveiculos.controller.admin;
 
-import br.com.luizmatosdev.desafioveiculos.controller.admin.openapi.VeiculoAdminControllerApi;
+import br.com.luizmatosdev.desafioveiculos.controller.admin.openapi.VeiculoAdminControllerOpenApi;
 import br.com.luizmatosdev.desafioveiculos.dto.veiculo.AlterarParcialmenteVeiculoRequestDTO;
 import br.com.luizmatosdev.desafioveiculos.dto.veiculo.VeiculoRequestDTO;
 import br.com.luizmatosdev.desafioveiculos.dto.veiculo.VeiculoResponseDTO;
@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/admin/veiculos")
 @RequiredArgsConstructor
-public class VeiculoAdminController implements VeiculoAdminControllerApi {
+public class VeiculoAdminController implements VeiculoAdminControllerOpenApi {
 
     private final VeiculoService service;
 
