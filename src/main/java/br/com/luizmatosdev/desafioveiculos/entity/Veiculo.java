@@ -4,13 +4,15 @@ import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.UUID;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 @Entity
 @Table(name = "veiculos")
-@Data
+@Getter
+@Setter
 public class Veiculo {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -42,6 +44,6 @@ public class Veiculo {
     @Column(precision = 15, scale = 2)
     private BigDecimal valor;
 
-    @Column(nullable = false, length = 8, unique = true)
+    @Column(nullable = false, length = 8)
     private String placa;
 }
