@@ -1,0 +1,13 @@
+databaseChangeLog:
+  - changeSet:
+      id: 02-add-placa-column
+      author: luizmatosdev
+      changes:
+        - addColumn:
+            tableName: veiculos
+            columns:
+              - column:
+                  name: placa
+                  type: VARCHAR(8)
+                  constraints:
+                    nullable: false
