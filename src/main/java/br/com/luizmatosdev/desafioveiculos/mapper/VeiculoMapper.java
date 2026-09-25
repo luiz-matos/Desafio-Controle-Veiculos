@@ -21,8 +21,15 @@ public class VeiculoMapper {
             veiculo.getMarca(),
             veiculo.getAno(),
             veiculo.getDescricao(),
-            veiculo.getValor().divide(valorDolar, 2, RoundingMode.HALF_UP),
+            converterParaDolar(veiculo.getValor(), valorDolar),
             veiculo.getPlaca()
         );
+    }
+
+    private static BigDecimal converterParaDolar(BigDecimal valorEmReais, BigDecimal valorDolar) {
+        if (valorEmReais == null) {
+            return null;
+        }
+        return valorEmReais.divide(valorDolar, 2, RoundingMode.HALF_UP);
     }
 }

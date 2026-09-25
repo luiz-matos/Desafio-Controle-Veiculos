@@ -3,6 +3,7 @@ package br.com.luizmatosdev.desafioveiculos.controller;
 import br.com.luizmatosdev.desafioveiculos.ApiTest;
 import org.junit.jupiter.api.Test;
 
+import static org.hamcrest.Matchers.nullValue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -55,5 +56,21 @@ class VeiculoApiTest extends ApiTest {
 
         mockMvc.perform(comToken(get("/api/veiculos/" + id), tokenUser()))
                 .andExpect(jsonPath("$.data.valor").value(2000.00));
+    }
+
+    @Test
+    void listaNormalmenteQuandoUmVeiculoNaoTemValor() throws Exception {
+        criarVeiculo(veiculo("Civic", "Honda", 2020, "10000", "ABC1234"));
+        String semValor = criarVeiculo("""
+                {"veiculo":"Uno","marca":"Fiat","ano":2010,"placa":"SEM0001"}
+                """);
+
+        mockMvc.perform(comToken(get("/api/veiculos/" + semValor), tokenUser()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data.valor").value(nullValue()));
+
+        mockMvc.perform(comToken(get("/api/veiculos"), tokenUser()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.content.length()").value(2));
     }
 }
