@@ -4,8 +4,6 @@ import br.com.luizmatosdev.desafioveiculos.dto.veiculo.*;
 import br.com.luizmatosdev.desafioveiculos.entity.Veiculo;
 import br.com.luizmatosdev.desafioveiculos.exception.VeiculoJaExistenteException;
 import br.com.luizmatosdev.desafioveiculos.exception.VeiculoNaoExistenteException;
-import br.com.luizmatosdev.desafioveiculos.interfaces.service.IValorDolarService;
-import br.com.luizmatosdev.desafioveiculos.interfaces.service.IVeiculoService;
 import br.com.luizmatosdev.desafioveiculos.mapper.VeiculoMapper;
 import br.com.luizmatosdev.desafioveiculos.repository.VeiculoRepository;
 import br.com.luizmatosdev.desafioveiculos.specification.VeiculoSpecification;
@@ -20,19 +18,30 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class VeiculoService implements IVeiculoService {
+public class VeiculoService {
 
     private static final String INDICE_PLACA_UNICA = "uk_veiculos_placa_ativa";
 
     private final VeiculoRepository repository;
-    private final IValorDolarService valorDolarService;
+    private final ValorDolarService valorDolarService;
 
-    @Override
+    /**
+     * Busca um veículo pelo seu ID.
+     *
+     * @param id ID único do veículo
+     * @return Dados do veículo com valor convertido para dólar
+     * @throws VeiculoNaoExistenteException se o veículo não for encontrado
+     */
     public VeiculoResponseDTO buscar(UUID id) {
         return paraResposta(buscarVeiculo(id));
     }
 
-    @Override
+    /**
+     * Lista veículos com paginação e filtros opcionais.
+     *
+     * @param listarVeiculosDTO Parâmetros de paginação e filtros
+     * @return Página com lista de veículos e valores convertidos para dólar
+     */
     public Page<VeiculoResponseDTO> listar(ListarVeiculosDTO listarVeiculosDTO) {
         var pageable = PageRequest.of(listarVeiculosDTO.page(), listarVeiculosDTO.size(), listarVeiculosDTO.sort());
         var specification = VeiculoSpecification.filtrar(listarVeiculosDTO);
@@ -41,7 +50,13 @@ public class VeiculoService implements IVeiculoService {
         return todos.map(veiculo -> VeiculoMapper.toResponseDTO(veiculo, valorDolar));
     }
 
-    @Override
+    /**
+     * Cria um novo veículo.
+     *
+     * @param veiculoDto Dados do veículo a ser criado
+     * @return Dados do veículo criado com valor convertido para dólar
+     * @throws VeiculoJaExistenteException se já existir um veículo com a mesma placa
+     */
     public VeiculoResponseDTO criar(VeiculoRequestDTO veiculoDto) {
         Veiculo veiculo = veiculoDto.toVeiculo();
         validacaoVeiculoPlacaJaExistente(veiculo.getPlaca());
@@ -49,7 +64,15 @@ public class VeiculoService implements IVeiculoService {
         return paraResposta(salvar(veiculo));
     }
 
-    @Override
+    /**
+     * Altera completamente um veículo existente.
+     *
+     * @param id      ID do veículo a ser alterado
+     * @param request Novos dados do veículo
+     * @return Dados do veículo alterado com valor convertido para dólar
+     * @throws VeiculoNaoExistenteException se o veículo não for encontrado
+     * @throws VeiculoJaExistenteException  se a nova placa já estiver em uso
+     */
     public VeiculoResponseDTO alterar(UUID id, VeiculoRequestDTO request) {
         Veiculo veiculo = buscarVeiculo(id);
         validarTrocaDePlaca(veiculo, request.placa());
@@ -63,7 +86,15 @@ public class VeiculoService implements IVeiculoService {
         return paraResposta(salvar(veiculo));
     }
 
-    @Override
+    /**
+     * Altera parcialmente um veículo existente, atualizando apenas os campos informados.
+     *
+     * @param id      ID do veículo a ser alterado
+     * @param request Dados parciais do veículo (campos nulos são ignorados)
+     * @return Dados do veículo alterado com valor convertido para dólar
+     * @throws VeiculoNaoExistenteException se o veículo não for encontrado
+     * @throws VeiculoJaExistenteException  se a nova placa já estiver em uso
+     */
     public VeiculoResponseDTO alterarParcialmente(UUID id, AlterarParcialmenteVeiculoRequestDTO request) {
         Veiculo veiculo = buscarVeiculo(id);
         validarTrocaDePlaca(veiculo, request.placa());
@@ -77,12 +108,21 @@ public class VeiculoService implements IVeiculoService {
         return paraResposta(salvar(veiculo));
     }
 
-    @Override
+    /**
+     * Remove um veículo do sistema.
+     *
+     * @param id ID do veículo a ser removido
+     * @throws VeiculoNaoExistenteException se o veículo não for encontrado
+     */
     public void deletar(UUID id) {
         repository.delete(buscarVeiculo(id));
     }
 
-    @Override
+    /**
+     * Busca a quantidade de veículos agrupados por marca.
+     *
+     * @return Lista com quantidade de veículos por marca
+     */
     public List<QuantidadeVeiculoPorMarcaResponseDTO> buscarQuantidadePorMarca() {
         return repository.contadorQuantidadePorMarca();
     }

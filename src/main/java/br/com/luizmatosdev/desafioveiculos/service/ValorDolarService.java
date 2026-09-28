@@ -3,7 +3,6 @@ package br.com.luizmatosdev.desafioveiculos.service;
 import br.com.luizmatosdev.desafioveiculos.client.EconomiaAwesomeApiWsClient;
 import br.com.luizmatosdev.desafioveiculos.client.FrankfurterApiClient;
 import br.com.luizmatosdev.desafioveiculos.exception.ErroWsException;
-import br.com.luizmatosdev.desafioveiculos.interfaces.service.IValorDolarService;
 import java.math.BigDecimal;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.Cacheable;
@@ -11,12 +10,19 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class ValorDolarService implements IValorDolarService {
+public class ValorDolarService {
 
     private final EconomiaAwesomeApiWsClient economiaAwesomeApiWsClient;
     private final FrankfurterApiClient frankfurterApiClient;
 
-    @Override
+    /**
+     * Busca o valor atual do dólar em relação ao real.
+     * Tenta buscar primeiro na API AwesomeAPI, caso falhe, tenta na API Frankfurter.
+     * O resultado é armazenado em cache, utilizando Redis.
+     *
+     * @return Valor atual do dólar
+     * @throws ErroWsException se ambas as APIs falharem
+     */
     @Cacheable(value = "dolar", key = "'valor-atual'")
     public BigDecimal buscarValorAtual() {
         BigDecimal valorAwesomeApi = economiaAwesomeApiWsClient.buscarValorDolarAgora();

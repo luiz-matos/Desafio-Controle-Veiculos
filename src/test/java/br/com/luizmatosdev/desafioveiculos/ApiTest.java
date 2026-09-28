@@ -4,7 +4,7 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import br.com.luizmatosdev.desafioveiculos.interfaces.service.IValorDolarService;
+import br.com.luizmatosdev.desafioveiculos.service.ValorDolarService;
 import com.jayway.jsonpath.JsonPath;
 import java.math.BigDecimal;
 import org.junit.jupiter.api.BeforeEach;
@@ -35,7 +35,7 @@ public abstract class ApiTest {
     protected JdbcTemplate jdbcTemplate;
 
     @MockitoBean
-    protected IValorDolarService valorDolarService;
+    protected ValorDolarService valorDolarService;
 
     @BeforeEach
     void prepararCenario() {

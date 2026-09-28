@@ -3,7 +3,7 @@ package br.com.luizmatosdev.desafioveiculos.controller;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import br.com.luizmatosdev.desafioveiculos.interfaces.service.IValorDolarService;
+import br.com.luizmatosdev.desafioveiculos.service.ValorDolarService;
 import com.jayway.jsonpath.JsonPath;
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -26,7 +26,7 @@ class ErroHttpTest {
     private int port;
 
     @MockitoBean
-    private IValorDolarService valorDolarService;
+    private ValorDolarService valorDolarService;
 
     private final HttpClient http = HttpClient.newHttpClient();
 
