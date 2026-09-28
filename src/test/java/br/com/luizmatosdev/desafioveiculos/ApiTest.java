@@ -59,7 +59,7 @@ public abstract class ApiTest {
                 .andReturn()
                 .getResponse()
                 .getContentAsString();
-        return JsonPath.read(resposta, "$.token");
+        return JsonPath.read(resposta, "$.data.token");
     }
 
     protected MockHttpServletRequestBuilder comToken(MockHttpServletRequestBuilder request, String token) {

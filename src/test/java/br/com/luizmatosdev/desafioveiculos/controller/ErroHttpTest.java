@@ -44,7 +44,7 @@ class ErroHttpTest {
         HttpResponse<String> resposta = enviar(HttpRequest.newBuilder(uri("/auth/login"))
                 .header("Content-Type", "application/json")
                 .POST(HttpRequest.BodyPublishers.ofString("{\"username\":\"admin\",\"password\":\"admin123\"}")));
-        return JsonPath.read(resposta.body(), "$.token");
+        return JsonPath.read(resposta.body(), "$.data.token");
     }
 
     private HttpResponse<String> enviar(HttpRequest.Builder request) throws Exception {

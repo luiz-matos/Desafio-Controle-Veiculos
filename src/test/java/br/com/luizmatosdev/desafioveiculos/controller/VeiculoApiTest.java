@@ -78,7 +78,7 @@ class VeiculoApiTest extends ApiTest {
 
         mockMvc.perform(comToken(get("/api/veiculos"), tokenUser()))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.content.length()").value(2));
+                .andExpect(jsonPath("$.data.content.length()").value(2));
     }
 
     @Test

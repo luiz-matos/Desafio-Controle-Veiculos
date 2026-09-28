@@ -10,8 +10,8 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PagedModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -22,11 +22,11 @@ public class VeiculoApiController implements VeiculoApiControllerOpenApi {
     private final VeiculoService veiculoService;
 
     @Override
-    public ResponseEntity<Page<VeiculoResponseDTO>> listar(
+    public ResponseEntity<ResponseService<PagedModel<VeiculoResponseDTO>>> listar(
             Pageable pageable, String marca, Integer ano, BigDecimal minPreco, BigDecimal maxPreco) {
         ListarVeiculosDTO listarVeiculosDTO = new ListarVeiculosDTO(
                 pageable.getPageNumber(), pageable.getPageSize(), pageable.getSort(), marca, ano, minPreco, maxPreco);
-        return ResponseEntity.ok(veiculoService.listar(listarVeiculosDTO));
+        return ResponseEntity.ok(ResponseService.build(new PagedModel<>(veiculoService.listar(listarVeiculosDTO))));
     }
 
     @Override

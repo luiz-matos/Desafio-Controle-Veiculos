@@ -3,6 +3,7 @@ package br.com.luizmatosdev.desafioveiculos.controller;
 import br.com.luizmatosdev.desafioveiculos.config.JwtUtil;
 import br.com.luizmatosdev.desafioveiculos.dto.token.LoginRequest;
 import br.com.luizmatosdev.desafioveiculos.dto.token.TokenResponse;
+import br.com.luizmatosdev.desafioveiculos.service.ResponseService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -23,13 +24,13 @@ public class AuthController {
     private final JwtUtil jwtUtil;
 
     @PostMapping("/login")
-    public ResponseEntity<TokenResponse> login(@RequestBody LoginRequest loginRequest) {
+    public ResponseEntity<ResponseService<TokenResponse>> login(@RequestBody LoginRequest loginRequest) {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(loginRequest.username(), loginRequest.password()));
 
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
         String token = jwtUtil.generateToken(userDetails);
 
-        return ResponseEntity.ok(new TokenResponse(token));
+        return ResponseEntity.ok(ResponseService.build(new TokenResponse(token)));
     }
 }

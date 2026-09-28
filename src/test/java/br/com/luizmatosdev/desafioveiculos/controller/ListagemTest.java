@@ -21,35 +21,40 @@ class ListagemTest extends ApiTest {
 
     @Test
     void filtraPelaMarca() throws Exception {
-        listar("?marca=Toyota&sort=veiculo").andExpect(jsonPath("$.content[*].veiculo", contains("Corolla")));
+        listar("?marca=Toyota&sort=veiculo").andExpect(jsonPath("$.data.content[*].veiculo", contains("Corolla")));
     }
 
     @Test
     void filtraPelaMarcaSemDiferenciarMaiuscula() throws Exception {
-        listar("?marca=hONDA&sort=veiculo").andExpect(jsonPath("$.content[*].veiculo", contains("Civic", "Fit")));
+        listar("?marca=hONDA&sort=veiculo").andExpect(jsonPath("$.data.content[*].veiculo", contains("Civic", "Fit")));
     }
 
     @Test
     void filtraPeloAno() throws Exception {
-        listar("?ano=2020").andExpect(jsonPath("$.content[*].veiculo", contains("Civic")));
+        listar("?ano=2020").andExpect(jsonPath("$.data.content[*].veiculo", contains("Civic")));
     }
 
     @Test
     void filtraPelaFaixaDeValorEmReais() throws Exception {
         listar("?minPreco=9000&maxPreco=20000&sort=veiculo")
-                .andExpect(jsonPath("$.content[*].veiculo", contains("Civic", "Corolla")));
+                .andExpect(jsonPath("$.data.content[*].veiculo", contains("Civic", "Corolla")));
     }
 
     @Test
     void ordenaPeloCampoInformado() throws Exception {
-        listar("?sort=veiculo,desc").andExpect(jsonPath("$.content[*].veiculo", contains("Fit", "Corolla", "Civic")));
+        listar("?sort=veiculo,desc")
+                .andExpect(jsonPath("$.data.content[*].veiculo", contains("Fit", "Corolla", "Civic")));
     }
 
     @Test
     void paginaOResultadoOrdenado() throws Exception {
         listar("?sort=veiculo&size=2&page=1")
-                .andExpect(jsonPath("$.content[*].veiculo", contains("Fit")))
-                .andExpect(jsonPath("$.totalElements").value(3));
+                .andExpect(jsonPath("$.message.codigo").value(0))
+                .andExpect(jsonPath("$.data.content[*].veiculo", contains("Fit")))
+                .andExpect(jsonPath("$.data.page.size").value(2))
+                .andExpect(jsonPath("$.data.page.number").value(1))
+                .andExpect(jsonPath("$.data.page.totalElements").value(3))
+                .andExpect(jsonPath("$.data.page.totalPages").value(2));
     }
 
     @Test
@@ -57,7 +62,7 @@ class ListagemTest extends ApiTest {
         String id = criarVeiculo(veiculo("Ka", "Ford", 2015, "5000", "JKL3456"));
         mockMvc.perform(comToken(delete("/admin/veiculos/" + id), tokenAdmin())).andExpect(status().isNoContent());
 
-        listar("?marca=Ford").andExpect(jsonPath("$.totalElements").value(0));
+        listar("?marca=Ford").andExpect(jsonPath("$.data.page.totalElements").value(0));
     }
 
     @Test

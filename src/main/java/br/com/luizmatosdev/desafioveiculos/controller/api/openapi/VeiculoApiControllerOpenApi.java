@@ -15,9 +15,9 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.data.web.PagedModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -68,7 +68,7 @@ public interface VeiculoApiControllerOpenApi {
             schema = @Schema(type = "number"))
     @Operation(summary = "Lista os veículos")
     @ApiResponses(value = {@ApiResponse(responseCode = "200")})
-    ResponseEntity<Page<VeiculoResponseDTO>> listar(
+    ResponseEntity<ResponseService<PagedModel<VeiculoResponseDTO>>> listar(
             @Parameter(hidden = true) @PageableDefault Pageable pageable,
             @RequestParam(required = false) String marca,
             @RequestParam(required = false) Integer ano,
