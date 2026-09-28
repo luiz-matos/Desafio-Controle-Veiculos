@@ -9,9 +9,9 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>br.com.luizmatosdev</groupId>
-    <artifactId>desafio-veiculos</artifactId>
+    <artifactId>desafio-controle-veiculos</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>desafio-veiculos</name>
+    <name>desafio-controle-veiculos</name>
     <description>API de cadastro de veículos com o valor convertido para dólar</description>
     <properties>
         <java.version>17</java.version>
