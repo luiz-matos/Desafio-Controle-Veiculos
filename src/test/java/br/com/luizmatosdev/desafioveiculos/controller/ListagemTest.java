@@ -25,6 +25,11 @@ class ListagemTest extends ApiTest {
     }
 
     @Test
+    void filtraPelaMarcaSemDiferenciarMaiuscula() throws Exception {
+        listar("?marca=hONDA&sort=veiculo").andExpect(jsonPath("$.content[*].veiculo", contains("Civic", "Fit")));
+    }
+
+    @Test
     void filtraPeloAno() throws Exception {
         listar("?ano=2020").andExpect(jsonPath("$.content[*].veiculo", contains("Civic")));
     }

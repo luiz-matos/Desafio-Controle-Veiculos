@@ -5,6 +5,7 @@ import br.com.luizmatosdev.desafioveiculos.entity.Veiculo;
 import jakarta.persistence.criteria.Predicate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 import org.springframework.data.jpa.domain.Specification;
 
@@ -20,7 +21,9 @@ public class VeiculoSpecification {
             predicates.add(criteriaBuilder.isFalse(root.get("deletado")));
 
             if (Objects.nonNull(listarVeiculosDTO.marca())) {
-                predicates.add(criteriaBuilder.like(root.get("marca"), "%" + listarVeiculosDTO.marca() + "%"));
+                predicates.add(criteriaBuilder.like(
+                        criteriaBuilder.lower(root.get("marca")),
+                        "%" + listarVeiculosDTO.marca().toLowerCase(Locale.ROOT) + "%"));
             }
 
             if (Objects.nonNull(listarVeiculosDTO.ano())) {
