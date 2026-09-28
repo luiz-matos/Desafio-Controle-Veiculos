@@ -1,5 +1,6 @@
 package br.com.luizmatosdev.desafioveiculos.config;
 
+import io.jsonwebtoken.JwtParser;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import java.nio.charset.StandardCharsets;
@@ -13,10 +14,12 @@ import org.springframework.stereotype.Component;
 public class JwtUtil {
 
     private final SecretKey key;
+    private final JwtParser parser;
     private final long expiration = 86400000; // 24 hours
 
     public JwtUtil(@Value("${jwt.secret}") String secret) {
         this.key = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
+        this.parser = Jwts.parser().verifyWith(key).build();
     }
 
     public String generateToken(UserDetails userDetails) {
@@ -28,26 +31,10 @@ public class JwtUtil {
                 .compact();
     }
 
+    /**
+     * @throws io.jsonwebtoken.JwtException se o token estiver malformado, com outra assinatura ou vencido
+     */
     public String extractUsername(String token) {
-        return Jwts.parser()
-                .verifyWith(key)
-                .build()
-                .parseSignedClaims(token)
-                .getPayload()
-                .getSubject();
-    }
-
-    public boolean isTokenValid(String token, UserDetails userDetails) {
-        return extractUsername(token).equals(userDetails.getUsername()) && !isTokenExpired(token);
-    }
-
-    private boolean isTokenExpired(String token) {
-        return Jwts.parser()
-                .verifyWith(key)
-                .build()
-                .parseSignedClaims(token)
-                .getPayload()
-                .getExpiration()
-                .before(new Date());
+        return parser.parseSignedClaims(token).getPayload().getSubject();
     }
 }
