@@ -21,7 +21,8 @@ class ValidacaoTest extends ApiTest {
                         .content("{}"))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.message.codigo").value(-90))
-                .andExpect(jsonPath("$.data.fields[*].field", containsInAnyOrder("veiculo", "marca", "ano", "valor", "placa")));
+                .andExpect(jsonPath(
+                        "$.data.fields[*].field", containsInAnyOrder("veiculo", "marca", "ano", "valor", "placa")));
     }
 
     @Test
