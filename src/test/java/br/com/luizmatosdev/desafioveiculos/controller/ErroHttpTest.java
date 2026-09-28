@@ -37,7 +37,7 @@ class ErroHttpTest {
                 .GET());
 
         assertEquals(400, resposta.statusCode());
-        assertTrue(resposta.body().contains("/api/veiculos/nao-e-uuid"), resposta.body());
+        assertTrue(resposta.body().contains("\"codigo\":-91"), resposta.body());
     }
 
     private String tokenAdmin() throws Exception {
