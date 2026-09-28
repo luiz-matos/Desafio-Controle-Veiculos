@@ -1,26 +1,8 @@
 package br.com.luizmatosdev.desafioveiculos.dto.token;
 
-public class TokenResponse {
-    private String token;
-    private String type = "Bearer";
+public record TokenResponse(String token, String type) {
 
     public TokenResponse(String token) {
-        this.token = token;
-    }
-
-    public String getToken() {
-        return token;
-    }
-
-    public void setToken(String token) {
-        this.token = token;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
+        this(token, "Bearer");
     }
 }
