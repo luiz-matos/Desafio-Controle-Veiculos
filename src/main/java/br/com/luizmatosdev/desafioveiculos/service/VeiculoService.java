@@ -25,9 +25,7 @@ public class VeiculoService implements IVeiculoService {
 
     @Override
     public VeiculoResponseDTO buscar(UUID id) {
-        Veiculo veiculo = repository.findById(id).orElseThrow(VeiculoNaoExistenteException::new);
-        var valorDolar = valorDolarService.buscarValorAtual();
-        return VeiculoMapper.toResponseDTO(veiculo, valorDolar);
+        return paraResposta(buscarVeiculo(id));
     }
 
     @Override
@@ -44,42 +42,27 @@ public class VeiculoService implements IVeiculoService {
         Veiculo veiculo = veiculoDto.toVeiculo();
         validacaoVeiculoPlacaJaExistente(veiculo.getPlaca());
 
-        Veiculo salvo = repository.save(veiculo);
-        var valorDolar = valorDolarService.buscarValorAtual();
-        return VeiculoMapper.toResponseDTO(salvo, valorDolar);
-    }
-
-    private void validacaoVeiculoPlacaJaExistente(String placa) {
-        Veiculo veiculoExistente = repository.buscarPorPlaca(placa).orElse(null);
-
-        if (veiculoExistente != null) {
-            throw new VeiculoJaExistenteException();
-        }
+        return paraResposta(repository.save(veiculo));
     }
 
     @Override
     public VeiculoResponseDTO alterar(UUID id, VeiculoRequestDTO request) {
-        Veiculo veiculo = repository.findById(id).orElseThrow(VeiculoNaoExistenteException::new);
-        if (!veiculo.getPlaca().equals(request.placa())) {
-            validacaoVeiculoPlacaJaExistente(request.placa());
-        }
+        Veiculo veiculo = buscarVeiculo(id);
+        validarTrocaDePlaca(veiculo, request.placa());
+
         veiculo.setVeiculo(request.veiculo());
         veiculo.setMarca(request.marca());
         veiculo.setAno(request.ano());
         veiculo.setDescricao(request.descricao());
         veiculo.setValor(request.valor());
         veiculo.setPlaca(request.placa());
-        Veiculo salvo = repository.save(veiculo);
-        var valorDolar = valorDolarService.buscarValorAtual();
-        return VeiculoMapper.toResponseDTO(salvo, valorDolar);
+        return paraResposta(repository.save(veiculo));
     }
 
     @Override
     public VeiculoResponseDTO alterarParcialmente(UUID id, AlterarParcialmenteVeiculoRequestDTO request) {
-        Veiculo veiculo = repository.findById(id).orElseThrow(VeiculoNaoExistenteException::new);
-        if (request.placa() != null && !veiculo.getPlaca().equals(request.placa())) {
-            validacaoVeiculoPlacaJaExistente(request.placa());
-        }
+        Veiculo veiculo = buscarVeiculo(id);
+        validarTrocaDePlaca(veiculo, request.placa());
 
         if (request.veiculo() != null) veiculo.setVeiculo(request.veiculo());
         if (request.marca() != null) veiculo.setMarca(request.marca());
@@ -87,19 +70,37 @@ public class VeiculoService implements IVeiculoService {
         if (request.descricao() != null) veiculo.setDescricao(request.descricao());
         if (request.valor() != null) veiculo.setValor(request.valor());
         if (request.placa() != null) veiculo.setPlaca(request.placa());
-        Veiculo salvo = repository.save(veiculo);
-        var valorDolar = valorDolarService.buscarValorAtual();
-        return VeiculoMapper.toResponseDTO(salvo, valorDolar);
+        return paraResposta(repository.save(veiculo));
     }
 
     @Override
     public void deletar(UUID id) {
-        Veiculo veiculo = repository.findById(id).orElseThrow(VeiculoNaoExistenteException::new);
-        repository.delete(veiculo);
+        repository.delete(buscarVeiculo(id));
     }
 
     @Override
     public List<QuantidadeVeiculoPorMarcaResponseDTO> buscarQuantidadePorMarca() {
         return repository.contadorQuantidadePorMarca();
+    }
+
+    private Veiculo buscarVeiculo(UUID id) {
+        return repository.findById(id).orElseThrow(VeiculoNaoExistenteException::new);
+    }
+
+    private VeiculoResponseDTO paraResposta(Veiculo veiculo) {
+        return VeiculoMapper.toResponseDTO(veiculo, valorDolarService.buscarValorAtual());
+    }
+
+    /** Placa ausente (null) ou igual à atual não é troca e não precisa ser conferida. */
+    private void validarTrocaDePlaca(Veiculo veiculo, String novaPlaca) {
+        if (novaPlaca != null && !veiculo.getPlaca().equals(novaPlaca)) {
+            validacaoVeiculoPlacaJaExistente(novaPlaca);
+        }
+    }
+
+    private void validacaoVeiculoPlacaJaExistente(String placa) {
+        if (repository.buscarPorPlaca(placa).isPresent()) {
+            throw new VeiculoJaExistenteException();
+        }
     }
 }
