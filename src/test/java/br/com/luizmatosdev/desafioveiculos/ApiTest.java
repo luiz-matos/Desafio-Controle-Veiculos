@@ -32,7 +32,7 @@ public abstract class ApiTest {
     protected MockMvc mockMvc;
 
     @Autowired
-    private JdbcTemplate jdbcTemplate;
+    protected JdbcTemplate jdbcTemplate;
 
     @MockitoBean
     protected IValorDolarService valorDolarService;

@@ -59,11 +59,14 @@ class VeiculoApiTest extends ApiTest {
     }
 
     @Test
-    void listaNormalmenteQuandoUmVeiculoNaoTemValor() throws Exception {
+    void listaNormalmenteUmVeiculoGravadoSemValor() throws Exception {
         criarVeiculo(veiculo("Civic", "Honda", 2020, "10000", "ABC1234"));
-        String semValor = criarVeiculo("""
-                {"veiculo":"Uno","marca":"Fiat","ano":2010,"placa":"SEM0001"}
-                """);
+        // O valor passou a ser obrigatório, mas o banco ainda pode ter veículos gravados antes sem ele
+        String semValor = "6f1c7e1a-0000-4000-8000-000000000001";
+        jdbcTemplate.update(
+                "INSERT INTO veiculos (id, veiculo, marca, ano, placa, deletado, created, updated)"
+                        + " VALUES (CAST(? AS UUID), 'Uno', 'Fiat', 2010, 'SEM0001', false, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)",
+                semValor);
 
         mockMvc.perform(comToken(get("/api/veiculos/" + semValor), tokenUser()))
                 .andExpect(status().isOk())

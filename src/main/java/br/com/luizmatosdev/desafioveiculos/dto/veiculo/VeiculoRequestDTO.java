@@ -16,7 +16,7 @@ public record VeiculoRequestDTO(
 
         String descricao,
 
-        @PositiveOrZero BigDecimal valor,
+        @NotNull @PositiveOrZero BigDecimal valor,
 
         @NotBlank @Size(max = 8) String placa) {
     public Veiculo toVeiculo() {
