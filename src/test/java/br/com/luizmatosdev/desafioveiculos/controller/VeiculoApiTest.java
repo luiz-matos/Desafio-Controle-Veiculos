@@ -4,12 +4,16 @@ import static org.hamcrest.Matchers.nullValue;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import br.com.luizmatosdev.desafioveiculos.ApiTest;
 import br.com.luizmatosdev.desafioveiculos.exception.ErroWsException;
+import java.net.URI;
 import org.junit.jupiter.api.Test;
+import org.springframework.http.MediaType;
 
 class VeiculoApiTest extends ApiTest {
 
@@ -23,7 +27,7 @@ class VeiculoApiTest extends ApiTest {
                 .andExpect(jsonPath("$.data.veiculo").value("Civic"))
                 .andExpect(jsonPath("$.data.placa").value("ABC1234"));
 
-        mockMvc.perform(comToken(delete("/admin/veiculos/" + id), tokenAdmin())).andExpect(status().isOk());
+        mockMvc.perform(comToken(delete("/admin/veiculos/" + id), tokenAdmin())).andExpect(status().isNoContent());
 
         mockMvc.perform(comToken(get("/api/veiculos/" + id), tokenUser()))
                 .andExpect(status().isNotFound())
@@ -45,7 +49,7 @@ class VeiculoApiTest extends ApiTest {
     @Test
     void permiteCadastrarDeNovoAPlacaDeUmVeiculoExcluido() throws Exception {
         String id = criarVeiculo(veiculo("Civic", "Honda", 2020, "10000", "ABC1234"));
-        mockMvc.perform(comToken(delete("/admin/veiculos/" + id), tokenAdmin())).andExpect(status().isOk());
+        mockMvc.perform(comToken(delete("/admin/veiculos/" + id), tokenAdmin())).andExpect(status().isNoContent());
 
         criarVeiculo(veiculo("Civic", "Honda", 2020, "10000", "ABC1234"));
     }
@@ -85,5 +89,29 @@ class VeiculoApiTest extends ApiTest {
         mockMvc.perform(comToken(get("/api/veiculos/" + id), tokenUser()))
                 .andExpect(status().isServiceUnavailable())
                 .andExpect(jsonPath("$.message.codigo").value(-80));
+    }
+
+    @Test
+    void respondeOCadastroCom201EOEnderecoDoVeiculo() throws Exception {
+        String resposta = mockMvc.perform(comToken(post("/admin/veiculos"), tokenAdmin())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(veiculo("Civic", "Honda", 2020, "10000", "ABC1234")))
+                .andExpect(status().isCreated())
+                .andReturn()
+                .getResponse()
+                .getHeader("Location");
+
+        mockMvc.perform(comToken(get(URI.create(resposta).getPath()), tokenUser()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data.placa").value("ABC1234"));
+    }
+
+    @Test
+    void respondeAExclusaoCom204SemCorpo() throws Exception {
+        String id = criarVeiculo(veiculo("Civic", "Honda", 2020, "10000", "ABC1234"));
+
+        mockMvc.perform(comToken(delete("/admin/veiculos/" + id), tokenAdmin()))
+                .andExpect(status().isNoContent())
+                .andExpect(content().string(""));
     }
 }

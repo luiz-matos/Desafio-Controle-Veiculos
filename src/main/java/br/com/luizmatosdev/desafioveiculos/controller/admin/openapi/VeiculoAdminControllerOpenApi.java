@@ -25,7 +25,9 @@ public interface VeiculoAdminControllerOpenApi {
     @Operation(summary = "Cadastra um veículo")
     @ApiResponses(
             value = {
-                @ApiResponse(responseCode = "200"),
+                @ApiResponse(
+                        responseCode = "201",
+                        description = "Cadastrado; o cabeçalho Location traz o endereço do veículo"),
                 @ApiResponse(
                         responseCode = "400",
                         description = "Campo inválido ou obrigatório",
@@ -122,7 +124,7 @@ public interface VeiculoAdminControllerOpenApi {
     @Operation(summary = "Deleta um veículo")
     @ApiResponses(
             value = {
-                @ApiResponse(responseCode = "200"),
+                @ApiResponse(responseCode = "204", description = "Excluído"),
                 @ApiResponse(
                         responseCode = "404",
                         description = "Veículo não encontrado",
@@ -134,5 +136,5 @@ public interface VeiculoAdminControllerOpenApi {
                                                             "{\"message\": {\"codigo\": -2,\"descricao\":\"Veículo não encontrado\"}}")
                                         }))
             })
-    ResponseEntity<ResponseService<Void>> deletar(@PathVariable UUID id);
+    ResponseEntity<Void> deletar(@PathVariable UUID id);
 }

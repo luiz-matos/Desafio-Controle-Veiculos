@@ -55,7 +55,7 @@ class ListagemTest extends ApiTest {
     @Test
     void naoListaVeiculoExcluido() throws Exception {
         String id = criarVeiculo(veiculo("Ka", "Ford", 2015, "5000", "JKL3456"));
-        mockMvc.perform(comToken(delete("/admin/veiculos/" + id), tokenAdmin())).andExpect(status().isOk());
+        mockMvc.perform(comToken(delete("/admin/veiculos/" + id), tokenAdmin())).andExpect(status().isNoContent());
 
         listar("?marca=Ford").andExpect(jsonPath("$.totalElements").value(0));
     }

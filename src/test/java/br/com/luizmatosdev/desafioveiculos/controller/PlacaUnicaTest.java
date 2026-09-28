@@ -42,7 +42,7 @@ class PlacaUnicaTest extends ApiTest {
             for (Future<Integer> resposta : respostas) {
                 status.add(resposta.get());
             }
-            assertEquals(1, status.stream().filter(s -> s == 200).count(), status.toString());
+            assertEquals(1, status.stream().filter(s -> s == 201).count(), status.toString());
             assertEquals(CADASTROS - 1, status.stream().filter(s -> s == 422).count(), status.toString());
         } finally {
             threads.shutdown();
