@@ -1,6 +1,6 @@
 package br.com.luizmatosdev.desafioveiculos.dto.veiculo;
 
-import br.com.luizmatosdev.desafioveiculos.entity.Veiculo;
+import br.com.luizmatosdev.desafioveiculos.entity.DadosVeiculo;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
@@ -19,14 +19,7 @@ public record VeiculoRequestDTO(
         @NotNull @PositiveOrZero BigDecimal valor,
 
         @NotBlank @Size(max = 8) String placa) {
-    public Veiculo toVeiculo() {
-        Veiculo entity = new Veiculo();
-        entity.setVeiculo(this.veiculo);
-        entity.setMarca(this.marca);
-        entity.setAno(this.ano);
-        entity.setDescricao(this.descricao);
-        entity.setValor(this.valor);
-        entity.setPlaca(this.placa);
-        return entity;
+    public DadosVeiculo toDados() {
+        return new DadosVeiculo(veiculo, marca, ano, descricao, valor, placa);
     }
 }

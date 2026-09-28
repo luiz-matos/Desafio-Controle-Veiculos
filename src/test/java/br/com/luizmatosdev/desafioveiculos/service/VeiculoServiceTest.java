@@ -8,6 +8,7 @@ import br.com.luizmatosdev.desafioveiculos.dto.veiculo.ListarVeiculosDTO;
 import br.com.luizmatosdev.desafioveiculos.dto.veiculo.QuantidadeVeiculoPorMarcaResponseDTO;
 import br.com.luizmatosdev.desafioveiculos.dto.veiculo.VeiculoRequestDTO;
 import br.com.luizmatosdev.desafioveiculos.dto.veiculo.VeiculoResponseDTO;
+import br.com.luizmatosdev.desafioveiculos.entity.DadosVeiculo;
 import br.com.luizmatosdev.desafioveiculos.entity.Veiculo;
 import br.com.luizmatosdev.desafioveiculos.repository.VeiculoRepository;
 import java.math.BigDecimal;
@@ -24,6 +25,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.test.util.ReflectionTestUtils;
 
 @ExtendWith(MockitoExtension.class)
 class VeiculoServiceTest {
@@ -41,14 +43,7 @@ class VeiculoServiceTest {
     void buscar_DeveRetornarVeiculoComValorEmDolar_QuandoVeiculoExistir() {
         // Arrange
         UUID id = UUID.randomUUID();
-        Veiculo veiculo = new Veiculo();
-        veiculo.setId(id);
-        veiculo.setVeiculo("Civic");
-        veiculo.setMarca("Honda");
-        veiculo.setAno(2020);
-        veiculo.setDescricao("Sedan");
-        veiculo.setValor(new BigDecimal("10000.00"));
-        veiculo.setPlaca("ABC1234");
+        Veiculo veiculo = veiculo(id, "Civic", "Honda", 2020, "Sedan", new BigDecimal("10000.00"), "ABC1234");
 
         BigDecimal valorDolar = new BigDecimal("5.50");
 
@@ -77,21 +72,11 @@ class VeiculoServiceTest {
         // Arrange
         ListarVeiculosDTO filtros = new ListarVeiculosDTO(0, 10, Sort.unsorted(), null, null, null, null);
 
-        Veiculo veiculo1 = new Veiculo();
-        veiculo1.setId(UUID.randomUUID());
-        veiculo1.setVeiculo("Civic");
-        veiculo1.setMarca("Honda");
-        veiculo1.setAno(2020);
-        veiculo1.setValor(new BigDecimal("80000.00"));
-        veiculo1.setPlaca("ABC1234");
+        Veiculo veiculo1 =
+                veiculo(UUID.randomUUID(), "Civic", "Honda", 2020, null, new BigDecimal("80000.00"), "ABC1234");
 
-        Veiculo veiculo2 = new Veiculo();
-        veiculo2.setId(UUID.randomUUID());
-        veiculo2.setVeiculo("Corolla");
-        veiculo2.setMarca("Toyota");
-        veiculo2.setAno(2021);
-        veiculo2.setValor(new BigDecimal("90000.00"));
-        veiculo2.setPlaca("XYZ5678");
+        Veiculo veiculo2 =
+                veiculo(UUID.randomUUID(), "Corolla", "Toyota", 2021, null, new BigDecimal("90000.00"), "XYZ5678");
 
         List<Veiculo> veiculos = List.of(veiculo1, veiculo2);
         Page<Veiculo> pageVeiculos = new PageImpl<>(veiculos, PageRequest.of(0, 10), 2);
@@ -121,14 +106,8 @@ class VeiculoServiceTest {
         VeiculoRequestDTO request =
                 new VeiculoRequestDTO("Civic", "Honda", 2020, "Sedan", new BigDecimal("80000.00"), "ABC1234");
 
-        Veiculo veiculoSalvo = new Veiculo();
-        veiculoSalvo.setId(UUID.randomUUID());
-        veiculoSalvo.setVeiculo("Civic");
-        veiculoSalvo.setMarca("Honda");
-        veiculoSalvo.setAno(2020);
-        veiculoSalvo.setDescricao("Sedan");
-        veiculoSalvo.setValor(new BigDecimal("10000.00"));
-        veiculoSalvo.setPlaca("ABC1234");
+        Veiculo veiculoSalvo =
+                veiculo(UUID.randomUUID(), "Civic", "Honda", 2020, "Sedan", new BigDecimal("10000.00"), "ABC1234");
 
         BigDecimal valorDolar = new BigDecimal("5.50");
 
@@ -160,23 +139,10 @@ class VeiculoServiceTest {
         VeiculoRequestDTO request = new VeiculoRequestDTO(
                 "Corolla", "Toyota", 2021, "Sedan híbrido", new BigDecimal("90000.00"), "XYZ5678");
 
-        Veiculo veiculoExistente = new Veiculo();
-        veiculoExistente.setId(id);
-        veiculoExistente.setVeiculo("Civic");
-        veiculoExistente.setMarca("Honda");
-        veiculoExistente.setAno(2020);
-        veiculoExistente.setDescricao("Sedan");
-        veiculoExistente.setValor(new BigDecimal("10000.00"));
-        veiculoExistente.setPlaca("ABC1234");
+        Veiculo veiculoExistente = veiculo(id, "Civic", "Honda", 2020, "Sedan", new BigDecimal("10000.00"), "ABC1234");
 
-        Veiculo veiculoAlterado = new Veiculo();
-        veiculoAlterado.setId(id);
-        veiculoAlterado.setVeiculo("Corolla");
-        veiculoAlterado.setMarca("Toyota");
-        veiculoAlterado.setAno(2021);
-        veiculoAlterado.setDescricao("Sedan híbrido");
-        veiculoAlterado.setValor(new BigDecimal("50000.00"));
-        veiculoAlterado.setPlaca("XYZ5678");
+        Veiculo veiculoAlterado =
+                veiculo(id, "Corolla", "Toyota", 2021, "Sedan híbrido", new BigDecimal("50000.00"), "XYZ5678");
 
         BigDecimal valorDolar = new BigDecimal("5.50");
 
@@ -217,23 +183,10 @@ class VeiculoServiceTest {
                 null // placa - não altera
                 );
 
-        Veiculo veiculoExistente = new Veiculo();
-        veiculoExistente.setId(id);
-        veiculoExistente.setVeiculo("Civic");
-        veiculoExistente.setMarca("Honda");
-        veiculoExistente.setAno(2020);
-        veiculoExistente.setDescricao("Sedan");
-        veiculoExistente.setValor(new BigDecimal("80000.00"));
-        veiculoExistente.setPlaca("ABC1234");
+        Veiculo veiculoExistente = veiculo(id, "Civic", "Honda", 2020, "Sedan", new BigDecimal("80000.00"), "ABC1234");
 
-        Veiculo veiculoAlterado = new Veiculo();
-        veiculoAlterado.setId(id);
-        veiculoAlterado.setVeiculo("Civic"); // mantém
-        veiculoAlterado.setMarca("Honda"); // mantém
-        veiculoAlterado.setAno(2020); // mantém
-        veiculoAlterado.setDescricao("Sedan com ar condicionado"); // alterado
-        veiculoAlterado.setValor(new BigDecimal("85000.00")); // alterado
-        veiculoAlterado.setPlaca("ABC1234"); // mantém
+        Veiculo veiculoAlterado =
+                veiculo(id, "Civic", "Honda", 2020, "Sedan com ar condicionado", new BigDecimal("85000.00"), "ABC1234");
 
         BigDecimal valorDolar = new BigDecimal("5.50");
 
@@ -264,14 +217,7 @@ class VeiculoServiceTest {
     void deletarDeveDeletarVeiculoQuandoVeiculoExistir() {
         // Arrange
         UUID id = UUID.randomUUID();
-        Veiculo veiculo = new Veiculo();
-        veiculo.setId(id);
-        veiculo.setVeiculo("Civic");
-        veiculo.setMarca("Honda");
-        veiculo.setAno(2020);
-        veiculo.setDescricao("Sedan");
-        veiculo.setValor(new BigDecimal("80000.00"));
-        veiculo.setPlaca("ABC1234");
+        Veiculo veiculo = veiculo(id, "Civic", "Honda", 2020, "Sedan", new BigDecimal("80000.00"), "ABC1234");
 
         when(repository.findById(id)).thenReturn(Optional.of(veiculo));
 
@@ -307,5 +253,12 @@ class VeiculoServiceTest {
         assertEquals("Ford", resultado.get(2).marca());
 
         verify(repository).contadorQuantidadePorMarca();
+    }
+
+    private static Veiculo veiculo(
+            UUID id, String modelo, String marca, Integer ano, String descricao, BigDecimal valor, String placa) {
+        Veiculo veiculo = Veiculo.cadastrar(new DadosVeiculo(modelo, marca, ano, descricao, valor, placa));
+        ReflectionTestUtils.setField(veiculo, "id", id);
+        return veiculo;
     }
 }

@@ -58,7 +58,7 @@ public class VeiculoService {
      * @throws VeiculoJaExistenteException se já existir um veículo com a mesma placa
      */
     public VeiculoResponseDTO criar(VeiculoRequestDTO veiculoDto) {
-        Veiculo veiculo = veiculoDto.toVeiculo();
+        Veiculo veiculo = Veiculo.cadastrar(veiculoDto.toDados());
         validacaoVeiculoPlacaJaExistente(veiculo.getPlaca());
 
         return paraResposta(salvar(veiculo));
@@ -77,12 +77,7 @@ public class VeiculoService {
         Veiculo veiculo = buscarVeiculo(id);
         validarTrocaDePlaca(veiculo, request.placa());
 
-        veiculo.setVeiculo(request.veiculo());
-        veiculo.setMarca(request.marca());
-        veiculo.setAno(request.ano());
-        veiculo.setDescricao(request.descricao());
-        veiculo.setValor(request.valor());
-        veiculo.setPlaca(request.placa());
+        veiculo.alterar(request.toDados());
         return paraResposta(salvar(veiculo));
     }
 
@@ -99,12 +94,7 @@ public class VeiculoService {
         Veiculo veiculo = buscarVeiculo(id);
         validarTrocaDePlaca(veiculo, request.placa());
 
-        if (request.veiculo() != null) veiculo.setVeiculo(request.veiculo());
-        if (request.marca() != null) veiculo.setMarca(request.marca());
-        if (request.ano() != null) veiculo.setAno(request.ano());
-        if (request.descricao() != null) veiculo.setDescricao(request.descricao());
-        if (request.valor() != null) veiculo.setValor(request.valor());
-        if (request.placa() != null) veiculo.setPlaca(request.placa());
+        veiculo.alterarParcialmente(request.toDados());
         return paraResposta(salvar(veiculo));
     }
 
@@ -155,9 +145,8 @@ public class VeiculoService {
         return VeiculoMapper.toResponseDTO(veiculo, valorDolarService.buscarValorAtual());
     }
 
-    /** Placa ausente (null) ou igual à atual não é troca e não precisa ser conferida. */
     private void validarTrocaDePlaca(Veiculo veiculo, String novaPlaca) {
-        if (novaPlaca != null && !veiculo.getPlaca().equals(novaPlaca)) {
+        if (veiculo.trocaDePlacaPara(novaPlaca)) {
             validacaoVeiculoPlacaJaExistente(novaPlaca);
         }
     }
