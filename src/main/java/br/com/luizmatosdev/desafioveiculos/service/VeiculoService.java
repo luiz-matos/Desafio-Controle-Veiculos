@@ -10,8 +10,10 @@ import br.com.luizmatosdev.desafioveiculos.mapper.VeiculoMapper;
 import br.com.luizmatosdev.desafioveiculos.repository.VeiculoRepository;
 import br.com.luizmatosdev.desafioveiculos.specification.VeiculoSpecification;
 import java.util.List;
+import java.util.Locale;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -19,6 +21,8 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class VeiculoService implements IVeiculoService {
+
+    private static final String INDICE_PLACA_UNICA = "uk_veiculos_placa_ativa";
 
     private final VeiculoRepository repository;
     private final IValorDolarService valorDolarService;
@@ -42,7 +46,7 @@ public class VeiculoService implements IVeiculoService {
         Veiculo veiculo = veiculoDto.toVeiculo();
         validacaoVeiculoPlacaJaExistente(veiculo.getPlaca());
 
-        return paraResposta(repository.save(veiculo));
+        return paraResposta(salvar(veiculo));
     }
 
     @Override
@@ -56,7 +60,7 @@ public class VeiculoService implements IVeiculoService {
         veiculo.setDescricao(request.descricao());
         veiculo.setValor(request.valor());
         veiculo.setPlaca(request.placa());
-        return paraResposta(repository.save(veiculo));
+        return paraResposta(salvar(veiculo));
     }
 
     @Override
@@ -70,7 +74,7 @@ public class VeiculoService implements IVeiculoService {
         if (request.descricao() != null) veiculo.setDescricao(request.descricao());
         if (request.valor() != null) veiculo.setValor(request.valor());
         if (request.placa() != null) veiculo.setPlaca(request.placa());
-        return paraResposta(repository.save(veiculo));
+        return paraResposta(salvar(veiculo));
     }
 
     @Override
@@ -81,6 +85,26 @@ public class VeiculoService implements IVeiculoService {
     @Override
     public List<QuantidadeVeiculoPorMarcaResponseDTO> buscarQuantidadePorMarca() {
         return repository.contadorQuantidadePorMarca();
+    }
+
+    /**
+     * A checagem da placa antes de salvar não pega dois cadastros simultâneos com a mesma placa. Nesse
+     * caso quem barra é o índice único do banco, e a resposta é a mesma da placa repetida.
+     */
+    private Veiculo salvar(Veiculo veiculo) {
+        try {
+            return repository.saveAndFlush(veiculo);
+        } catch (DataIntegrityViolationException e) {
+            if (violouPlacaUnica(e)) {
+                throw new VeiculoJaExistenteException();
+            }
+            throw e;
+        }
+    }
+
+    private static boolean violouPlacaUnica(DataIntegrityViolationException e) {
+        String mensagem = e.getMostSpecificCause().getMessage();
+        return mensagem != null && mensagem.toLowerCase(Locale.ROOT).contains(INDICE_PLACA_UNICA);
     }
 
     private Veiculo buscarVeiculo(UUID id) {

@@ -1,0 +1,26 @@
+# A placa só precisa ser única entre os veículos não excluídos. O PostgreSQL faria isso com um índice
+# parcial (WHERE deletado = false), mas o H2 dos testes não tem índice parcial. A coluna gerada
+# placa_ativa vale a placa do veículo ativo e fica nula no excluído, e o índice único ignora os nulos.
+# O mecanismo é o mesmo nos dois bancos; só o PostgreSQL exige a palavra STORED.
+databaseChangeLog:
+  - changeSet:
+      id: 03-placa-unica-entre-ativos
+      author: luizmatosdev
+      changes:
+        - sql:
+            dbms: postgresql
+            sql: >-
+              ALTER TABLE veiculos ADD COLUMN placa_ativa VARCHAR(8)
+              GENERATED ALWAYS AS (CASE WHEN deletado THEN NULL ELSE placa END) STORED
+        - sql:
+            dbms: h2
+            sql: >-
+              ALTER TABLE veiculos ADD COLUMN placa_ativa VARCHAR(8)
+              GENERATED ALWAYS AS (CASE WHEN deletado THEN NULL ELSE placa END)
+        - createIndex:
+            tableName: veiculos
+            indexName: uk_veiculos_placa_ativa
+            unique: true
+            columns:
+              - column:
+                  name: placa_ativa

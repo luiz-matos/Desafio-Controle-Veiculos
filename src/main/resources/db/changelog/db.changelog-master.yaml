@@ -3,3 +3,5 @@ databaseChangeLog:
       file: db/changelog/01-create-table-veiculos.yaml
   - include:
       file: db/changelog/02-add-placa-column.yaml
+  - include:
+      file: db/changelog/03-placa-unica-entre-ativos.yaml

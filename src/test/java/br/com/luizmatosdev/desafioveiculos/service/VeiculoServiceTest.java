@@ -133,7 +133,7 @@ class VeiculoServiceTest {
         BigDecimal valorDolar = new BigDecimal("5.50");
 
         when(repository.buscarPorPlaca("ABC1234")).thenReturn(Optional.empty());
-        when(repository.save(any(Veiculo.class))).thenReturn(veiculoSalvo);
+        when(repository.saveAndFlush(any(Veiculo.class))).thenReturn(veiculoSalvo);
         when(valorDolarService.buscarValorAtual()).thenReturn(valorDolar);
 
         // Act
@@ -149,7 +149,7 @@ class VeiculoServiceTest {
         assertEquals("ABC1234", resultado.placa());
 
         verify(repository).buscarPorPlaca("ABC1234");
-        verify(repository).save(any(Veiculo.class));
+        verify(repository).saveAndFlush(any(Veiculo.class));
         verify(valorDolarService).buscarValorAtual();
     }
 
@@ -182,7 +182,7 @@ class VeiculoServiceTest {
 
         when(repository.findById(id)).thenReturn(Optional.of(veiculoExistente));
         when(repository.buscarPorPlaca("XYZ5678")).thenReturn(Optional.empty());
-        when(repository.save(any(Veiculo.class))).thenReturn(veiculoAlterado);
+        when(repository.saveAndFlush(any(Veiculo.class))).thenReturn(veiculoAlterado);
         when(valorDolarService.buscarValorAtual()).thenReturn(valorDolar);
 
         // Act
@@ -200,7 +200,7 @@ class VeiculoServiceTest {
 
         verify(repository).findById(id);
         verify(repository).buscarPorPlaca("XYZ5678");
-        verify(repository).save(any(Veiculo.class));
+        verify(repository).saveAndFlush(any(Veiculo.class));
         verify(valorDolarService).buscarValorAtual();
     }
 
@@ -238,7 +238,7 @@ class VeiculoServiceTest {
         BigDecimal valorDolar = new BigDecimal("5.50");
 
         when(repository.findById(id)).thenReturn(Optional.of(veiculoExistente));
-        when(repository.save(any(Veiculo.class))).thenReturn(veiculoAlterado);
+        when(repository.saveAndFlush(any(Veiculo.class))).thenReturn(veiculoAlterado);
         when(valorDolarService.buscarValorAtual()).thenReturn(valorDolar);
 
         // Act
@@ -255,7 +255,7 @@ class VeiculoServiceTest {
         assertEquals("ABC1234", resultado.placa()); // não alterado
 
         verify(repository).findById(id);
-        verify(repository).save(any(Veiculo.class));
+        verify(repository).saveAndFlush(any(Veiculo.class));
         verify(valorDolarService).buscarValorAtual();
         verify(repository, never()).buscarPorPlaca(anyString()); // não deve validar placa pois não foi alterada
     }
