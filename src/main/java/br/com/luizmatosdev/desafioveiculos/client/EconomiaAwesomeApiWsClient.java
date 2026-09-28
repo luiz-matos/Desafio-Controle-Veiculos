@@ -5,6 +5,7 @@ import br.com.luizmatosdev.desafioveiculos.dto.EconomiaAwesomeApiWsResponse;
 import java.math.BigDecimal;
 import java.util.Objects;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
@@ -16,7 +17,10 @@ public class EconomiaAwesomeApiWsClient {
     private final String urlApi;
 
     public EconomiaAwesomeApiWsClient(EconomiaAwesomeApiWsConfig config) {
-        this.restTemplate = new RestTemplate();
+        var requestFactory = new SimpleClientHttpRequestFactory();
+        requestFactory.setConnectTimeout(config.getTimeout());
+        requestFactory.setReadTimeout(config.getTimeout());
+        this.restTemplate = new RestTemplate(requestFactory);
         this.urlApi = config.getUrl();
     }
 

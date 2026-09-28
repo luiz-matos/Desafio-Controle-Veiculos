@@ -2,6 +2,7 @@ package br.com.luizmatosdev.desafioveiculos.client;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import br.com.luizmatosdev.desafioveiculos.config.EconomiaAwesomeApiWsConfig;
 import br.com.luizmatosdev.desafioveiculos.config.FrankfurterApiConfig;
@@ -10,6 +11,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.net.InetSocketAddress;
 import java.nio.charset.StandardCharsets;
+import java.time.Duration;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -20,17 +22,20 @@ class ClientesCotacaoTest {
     private HttpServer servidor;
     private int status;
     private String corpo;
+    private long demoraMs;
 
     @BeforeEach
     void subirServidor() throws IOException {
         servidor = HttpServer.create(new InetSocketAddress("localhost", 0), 0);
         servidor.createContext("/", troca -> {
+            dormir(demoraMs);
             byte[] bytes = corpo.getBytes(StandardCharsets.UTF_8);
             troca.getResponseHeaders().add("Content-Type", "application/json");
             troca.sendResponseHeaders(status, bytes.length);
             troca.getResponseBody().write(bytes);
             troca.close();
         });
+        servidor.setExecutor(java.util.concurrent.Executors.newCachedThreadPool());
         servidor.start();
     }
 
@@ -84,6 +89,35 @@ class ClientesCotacaoTest {
 
         assertNull(awesome(portaFechada).buscarValorDolarAgora());
         assertNull(frankfurter(portaFechada).buscarValorDolarAgora());
+    }
+
+    @Test
+    void desisteDaApiQueDemoraMaisQueOTimeout() {
+        responder(200, "{\"USDBRL\":{\"ask\":\"5.19\"}}");
+        demoraMs = 3000;
+        var config = new EconomiaAwesomeApiWsConfig();
+        config.setUrl(url());
+        config.setTimeout(Duration.ofSeconds(1));
+
+        long inicio = System.nanoTime();
+        assertNull(new EconomiaAwesomeApiWsClient(config).buscarValorDolarAgora());
+        long decorridoMs = Duration.ofNanos(System.nanoTime() - inicio).toMillis();
+
+        assertTrue(decorridoMs < 2500, "esperou " + decorridoMs + " ms");
+    }
+
+    @Test
+    void usaTimeoutDe30SegundosPorPadrao() {
+        assertEquals(Duration.ofSeconds(30), new EconomiaAwesomeApiWsConfig().getTimeout());
+        assertEquals(Duration.ofSeconds(30), new FrankfurterApiConfig().getTimeout());
+    }
+
+    private static void dormir(long ms) {
+        try {
+            Thread.sleep(ms);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
     }
 
     private void responder(int status, String corpo) {
