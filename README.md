@@ -1,10 +1,34 @@
-# Desafio Controle Veículos
+# 🚗 Desafio Controle Veículos
 
-API REST em Java 17 e Spring Boot 4 para cadastrar veículos e consultar o valor deles em dólar, com login JWT, perfis de acesso, cotação vinda de duas APIs públicas e cache no Redis.
+<div align="center">
+  <img src="https://img.shields.io/badge/Java-17-orange?style=for-the-badge&logo=openjdk" alt="Java 17">
+  <img src="https://img.shields.io/badge/Spring%20Boot-4.1.1-brightgreen?style=for-the-badge&logo=springboot" alt="Spring Boot 4.1.1">
+  <img src="https://img.shields.io/badge/PostgreSQL-17-blue?style=for-the-badge&logo=postgresql" alt="PostgreSQL 17">
+  <img src="https://img.shields.io/badge/Redis-Cache-red?style=for-the-badge&logo=redis" alt="Redis">
+  <img src="https://img.shields.io/badge/JWT-Autentica%C3%A7%C3%A3o-black?style=for-the-badge&logo=jsonwebtokens" alt="JWT">
+  <img src="https://img.shields.io/badge/Liquibase-Migrations-2962FF?style=for-the-badge&logo=liquibase" alt="Liquibase">
+  <img src="https://img.shields.io/badge/Swagger-OpenAPI-85EA2D?style=for-the-badge&logo=swagger&logoColor=black" alt="Swagger">
+  <img src="https://img.shields.io/badge/Licen%C3%A7a-MIT-yellow?style=for-the-badge" alt="Licença MIT">
+</div>
+
+<br>
+
+> 🎯 **API REST em Java 17 e Spring Boot 4 para cadastrar veículos e consultar o valor deles em dólar**, com login JWT, perfis de acesso, cotação vinda de duas APIs públicas e cache no Redis.
 
 O projeto é de 2025. Em 2026 voltei a ele para ver se funcionava de verdade: a conversão para dólar saía 25 vezes maior, os filtros da listagem não filtravam e quase todo erro chegava ao cliente como um 403 vazio.
 
-## Como rodar
+## 📋 Índice
+
+- [🚀 Como rodar](#-como-rodar)
+- [🔐 Autenticação](#-autenticação)
+- [📚 Endpoints](#-endpoints)
+- [📏 Regras](#-regras)
+- [📨 Envelope de resposta](#-envelope-de-resposta)
+- [🧩 Como o código funciona](#-como-o-código-funciona)
+- [🔄 Revisitando o projeto em 2026](#-revisitando-o-projeto-em-2026)
+- [📄 Licença](#-licença)
+
+## 🚀 Como rodar
 
 Precisa do JDK 17 ou mais novo e do Docker. O `compose.yaml` sobe o PostgreSQL 17, já com o banco `desafio_controle_veiculos`, e o Redis:
 
@@ -35,14 +59,14 @@ A documentação fica no Swagger, em `http://localhost:8080/swagger-ui/index.htm
 
 Os testes rodam com `./mvnw test`, sem Docker: sobem a aplicação com H2 e com a cotação fixa em 5,00. O `./mvnw verify` também confere a formatação do código, e o `./mvnw spotless:apply` corrige.
 
-## Autenticação
+## 🔐 Autenticação
 
 Dois usuários ficam em memória:
 
 | Usuário | Senha | Perfil | Pode |
 |---|---|---|---|
-| `user` | `user123` | USER | Consultar |
-| `admin` | `admin123` | USER e ADMIN | Consultar, cadastrar, alterar e excluir |
+| 👤 `user` | `user123` | USER | 📖 Consultar |
+| 👑 `admin` | `admin123` | USER e ADMIN | 📖 Consultar, ✏️ cadastrar, alterar e excluir |
 
 O login devolve um token que vale 24 horas:
 
@@ -61,22 +85,22 @@ curl -X POST http://localhost:8080/auth/login \
 
 As outras rotas recebem o token no cabeçalho `Authorization: Bearer <token>`.
 
-## Endpoints
+## 📚 Endpoints
 
 | Método | Rota | Perfil | O que faz | Sucesso |
 |---|---|---|---|---|
-| `POST` | `/auth/login` | público | Gera o token | 200 |
-| `GET` | `/api/veiculos` | USER | Lista com filtros, paginação e ordenação | 200 |
-| `GET` | `/api/veiculos/{id}` | USER | Busca um veículo | 200 |
-| `GET` | `/api/veiculos/relatorios/por-marca` | USER | Quantidade de veículos por marca | 200 |
-| `POST` | `/admin/veiculos` | ADMIN | Cadastra | 201, com o endereço do veículo no `Location` |
-| `PUT` | `/admin/veiculos/{id}` | ADMIN | Altera todos os campos | 200 |
-| `PATCH` | `/admin/veiculos/{id}` | ADMIN | Altera só os campos enviados | 200 |
-| `DELETE` | `/admin/veiculos/{id}` | ADMIN | Exclui | 204, sem corpo |
+| `POST` | `/auth/login` | 🌐 público | Gera o token | 200 |
+| `GET` | `/api/veiculos` | 👤 USER | Lista com filtros, paginação e ordenação | 200 |
+| `GET` | `/api/veiculos/{id}` | 👤 USER | Busca um veículo | 200 |
+| `GET` | `/api/veiculos/relatorios/por-marca` | 👤 USER | Quantidade de veículos por marca | 200 |
+| `POST` | `/admin/veiculos` | 👑 ADMIN | Cadastra | 201, com o endereço do veículo no `Location` |
+| `PUT` | `/admin/veiculos/{id}` | 👑 ADMIN | Altera todos os campos | 200 |
+| `PATCH` | `/admin/veiculos/{id}` | 👑 ADMIN | Altera só os campos enviados | 200 |
+| `DELETE` | `/admin/veiculos/{id}` | 👑 ADMIN | Exclui | 204, sem corpo |
 
 A listagem aceita `marca` (parte do nome, sem diferenciar maiúscula), `ano`, `minPreco` e `maxPreco` (em reais), além de `page`, `size` e `sort`, como em `?marca=honda&sort=valor,desc&size=5`.
 
-## Regras
+## 📏 Regras
 
 - Modelo, marca, ano, valor e placa são obrigatórios. Modelo e marca vão até 100 caracteres, a placa até 8, e o valor não pode ser negativo.
 - No `PATCH`, campo ausente mantém o valor atual, e campo enviado segue as mesmas regras do cadastro.
@@ -85,7 +109,7 @@ A listagem aceita `marca` (parte do nome, sem diferenciar maiúscula), `ano`, `m
 - O valor é cadastrado em reais e sai em dólar, dividido pela cotação do momento. Cada API de cotação tem 30 segundos para responder antes de a próxima ser consultada.
 - Dado inválido volta com 400, falta de login com 401, USER em rota de ADMIN com 403, veículo inexistente com 404, placa repetida com 422 e cotação indisponível com 503.
 
-## Envelope de resposta
+## 📨 Envelope de resposta
 
 Toda resposta da API com corpo vem no mesmo formato (a documentação do Swagger fica de fora): `message` com um código de retorno e a descrição, e `data` com o conteúdo, quando houver. Vale para sucesso, erro de regra, erro de validação, falta de login e até para a rota que não existe. A única resposta sem corpo é o 204 da exclusão.
 
@@ -153,7 +177,7 @@ Sem token:
 {"message": {"codigo": -70, "descricao": "Login necessário, ou token inválido ou vencido"}}
 ```
 
-## Como o código funciona
+## 🧩 Como o código funciona
 
 ```
 src/main/java/br/com/luizmatosdev/desafiocontroleveiculos/
@@ -198,11 +222,11 @@ erDiagram
     }
 ```
 
-## Revisitando o projeto em 2026
+## 🔄 Revisitando o projeto em 2026
 
 A análise mostrou que o README prometia mais do que a API entregava. Os testes antigos passavam porque eram unitários com mocks, e um deles conferia justamente a conta errada do dólar. Escrevi os testes pela API primeiro, vi cada bug acontecer e só então corrigi.
 
-### Bugs corrigidos
+### 🐛 Bugs corrigidos
 
 | Bug | Causa | Correção |
 |---|---|---|
@@ -221,7 +245,7 @@ A análise mostrou que o README prometia mais do que a API entregava. Os testes 
 | Falha nas duas APIs de cotação respondia 422 | Caía no handler das regras de negócio | 503 |
 | Os testes rodavam num esquema diferente do de produção | O perfil de teste recriava as tabelas pelo Hibernate por cima do Liquibase | O perfil troca só o banco |
 
-### Decisões técnicas
+### 🧠 Decisões técnicas
 
 **Valor em reais, resposta em dólar**
 
@@ -258,8 +282,16 @@ Depois dos bugs, reorganizei o código sem mudar o que a API faz:
 - **Regras que deixei de fora.** Não envolvi o valor num objeto `Money`: a única conta com dinheiro é a divisão pela cotação, e ela já fica num lugar só, o `VeiculoMapper`. E a entidade tem tantos campos quanto a tabela, então a regra de no máximo duas variáveis por classe não cabe nela.
 - **Mesmo resultado.** Gravei as respostas de 57 chamadas, cobrindo todas as rotas e os casos de erro, antes de cada rodada de refatoração, e comparei depois de cada commit. Ficaram idênticas.
 
-## Licença
+## 📄 Licença
 
 [MIT](LICENSE)
 
-Desenvolvido por **Luiz Matos**. [GitHub](https://github.com/luiz-matos) · [LinkedIn](https://www.linkedin.com/in/luizeduardomatos/)
+---
+
+<div align="center">
+  <p>Desenvolvido por <strong>Luiz Matos</strong></p>
+  <p>
+    <a href="https://github.com/luiz-matos">GitHub</a> •
+    <a href="https://www.linkedin.com/in/luizeduardomatos/">LinkedIn</a>
+  </p>
+</div>
