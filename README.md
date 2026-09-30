@@ -15,7 +15,7 @@
 
 > 🎯 **API REST em Java 17 e Spring Boot 4 para cadastrar veículos e consultar o valor deles em dólar**, com login JWT, perfis de acesso, cotação vinda de duas APIs públicas e cache no Redis.
 
-O projeto é de 2025. Em 2026 voltei a ele para ver se funcionava de verdade: a conversão para dólar saía 25 vezes maior, os filtros da listagem não filtravam e quase todo erro chegava ao cliente como um 403 vazio.
+Fiz o projeto em 2025, para estudar autenticação JWT, cache e integração com APIs externas no Spring Boot. Em 2026 voltei a ele para ver se funcionava de verdade: a conversão para dólar saía 25 vezes maior, os filtros da listagem não filtravam e quase todo erro chegava ao cliente como um 403 vazio.
 
 ## 📋 Índice
 
